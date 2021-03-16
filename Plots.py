@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 
+
 def plot_evolucion(log):
     gen = log.select("gen")
     fit_mins = log.select("min")
@@ -18,6 +19,7 @@ def plot_evolucion(log):
     ax1.legend(["Min", "Max", "Avg"])
     plt.grid(True)
 
+
 def plot_movimiento(x_a, y_a):
     plt.figure(2)
     plt.scatter(x_a, y_a)
@@ -28,6 +30,7 @@ def plot_movimiento(x_a, y_a):
     plt.show()
     plt.close()
 
+
 def plot_gaussian(x_ga, y_ga, n, Z_var, Z_mean):
     fig, axs = plt.subplots(2, 1, figsize=(3.5, 6))
 
@@ -35,7 +38,7 @@ def plot_gaussian(x_ga, y_ga, n, Z_var, Z_mean):
 
     im2 = axs[0].imshow(Z_var, interpolation='bilinear', origin='lower', cmap="viridis")
     plt.colorbar(im2, ax=axs[0], format='%.2f', label='σ', shrink=1.0)
-    #axs[0].set_xlabel("x [m]")
+    # axs[0].set_xlabel("x [m]")
     axs[0].set_ylabel("y [m]")
     axs[0].set_aspect('equal')
     axs[0].grid(True)
@@ -47,4 +50,25 @@ def plot_gaussian(x_ga, y_ga, n, Z_var, Z_mean):
     axs[1].set_aspect('equal')
     axs[1].grid(True)
 
+    plt.show()
+
+
+def plot_benchmark(bench_function):
+    plt.figure(2)
+    im4 = plt.imshow(bench_function, interpolation='bilinear', origin='lower', cmap="jet")
+    plt.colorbar(im4, format='%.2f', shrink=1)
+    plt.xlabel("x [m]")
+    plt.ylabel("y [m]")
+    plt.grid(True)
+    plt.show()
+
+
+def plot_error(MSE_data, it, GEN):
+    plt.figure(3)
+    plt.plot(it, MSE_data, '-')
+    plt.xlabel("Iterations")
+    plt.ylabel("MSE")
+    plt.xlim([0, GEN])
+    plt.grid(True)
+    plt.title("Mean Square Error")
     plt.show()
