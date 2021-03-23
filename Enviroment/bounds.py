@@ -57,16 +57,13 @@ def map_bound(xs, ys, load_file=False, file=0):
         else:
             print('An error occurred. Map bound, y array')
 
-        with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
-                  'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/bounds.npy', 'wb') as bn:
+        with open('Data/bounds.npy', 'wb') as bn:
             np.save(bn, df_bounds)
 
-        with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
-                  'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/grid.npy', 'wb') as gd:
+        with open('/Data/grid.npy', 'wb') as gd:
             np.save(gd, grid)
 
-        with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
-                  'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/available.npy', 'wb') as av:
+        with open('/Data/available.npy', 'wb') as av:
             np.save(av, available)
 
         # with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
@@ -91,8 +88,7 @@ def interest_area(load_file=False, file=0):
                     _z[i, j] = np.nan
         _z2 = np.transpose(_z)
 
-        with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
-                  'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/area.npy', 'wb') as ar:
+        with open('/Data/area.npy', 'wb') as ar:
             np.save(ar, _z2)
 
         return _z2

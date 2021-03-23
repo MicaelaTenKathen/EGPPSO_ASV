@@ -104,8 +104,7 @@ def create_map(grid, resolution, obstacles_on=False, randomize_shekel=False, sen
         stdz = np.nanstd(_z)
         _z = (_z - meanz) / stdz
 
-        with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
-                  'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/shww.npy', 'wb') as g:
+        with open('/Data/shww.npy', 'wb') as g:
             np.save(g, _z)
         return _z
 

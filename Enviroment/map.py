@@ -3,7 +3,7 @@ import numpy as np
 
 
 def black_white(resolution, xs, ys):
-    im = Image.open(r'C:\Users\mcjara\Downloads\snazzy-image-prueba.png')
+    im = Image.open(r'Image\snazzy-image-prueba.png')
     nim = im.resize((xs, ys))
     array = np.zeros((xs, ys))
     img = Image.new('RGB', (xs, ys))
