@@ -57,13 +57,13 @@ def map_bound(xs, ys, load_file=False, file=0):
         else:
             print('An error occurred. Map bound, y array')
 
-        with open('Data/bounds.npy', 'wb') as bn:
+        with open(path[-1] + '/Data/bounds.npy'.format(file), 'wb') as bn:
             np.save(bn, df_bounds)
 
-        with open('/Data/grid.npy', 'wb') as gd:
+        with open(path[-1] + '/Data/grid.npy'.format(file), 'wb') as gd:
             np.save(gd, grid)
 
-        with open('/Data/available.npy', 'wb') as av:
+        with open(path[-1] + '/Data/available.npy'.format(file), 'wb') as av:
             np.save(av, available)
 
         # with open('C:/Users/mcjara/OneDrive - Universidad Loyola '

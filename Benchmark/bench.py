@@ -104,7 +104,7 @@ def create_map(grid, resolution, obstacles_on=False, randomize_shekel=False, sen
         stdz = np.nanstd(_z)
         _z = (_z - meanz) / stdz
 
-        with open('/Data/shww.npy', 'wb') as g:
+        with open(path[-1] + '/Data/shww.npy'.format(file), 'wb') as g:
             np.save(g, _z)
         return _z
 
