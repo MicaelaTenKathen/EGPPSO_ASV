@@ -14,14 +14,15 @@ from Data_scripts.error import *
 from Data_scripts.data_treat import *
 from Data_scripts.data_save import savexlsx
 
-from Enviroment.bounds import *
 from Enviroment.map import *
 from Enviroment.plots import *
 
 
-bench_function, X_test, grid = available_bench(load_file=True, load_from_db=True)
+xs, ys = 1000, 1500
 
-grid_min, grid_max, grid_max_x, grid_max_y = map_values(grid)
+bench_function, X_test, grid, df_bounds = available_bench(xs, ys, load_file=False, load_from_db=False)
+
+grid_min, grid_max, grid_max_x, grid_max_y = map_values(xs, ys)
 
 gp_best, mu_best = [0, 0], [0, 0]
 part_dist, part_ant, distances, n_data, n_plot = np.zeros(8), np.zeros(8), np.zeros(4), float(1), float(1)
@@ -29,7 +30,7 @@ benchmark_data, n, sigma_data, mu_data, MSE_data, it = list(), list(), list(), l
 g, samples = 0, 0
 x_p, y_p, x_g, y_g, y_data = list(), list(), list(), list(), list()
 
-c1, c2, c3, c4, GEN, t, e1, e2, e3, e4 = 2, 2, 0, 0, 200, 10, 'Pruebas/Error.xlsx', 'Pruebas/Sigma.xlsx', 'Pruebas/Mu' \
+c1, c2, c3, c4, GEN, t, e1, e2, e3, e4 = 2, 2, 0, 0, 1000, 10, 'Pruebas/Error.xlsx', 'Pruebas/Sigma.xlsx', 'Pruebas/Mu' \
                                                                                                           '.xlsx', \
                                          'Pruebas/Distance.xlsx'
 initPSO()
@@ -39,14 +40,15 @@ random.seed(26)
 pop, best = swarm(toolbox, 4)
 stats, logbook = statistic()
 
-ker = initGP(0.6, 0.5, simple_equation=True)
+ker = RBF(length_scale=0.6)
 
 gpr = GaussianProcessRegressor(kernel=ker, alpha=1 ** 2)  # alpha = noise**2
 
 for part in pop:
     x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, part, x_p, y_p, x_g, y_g,
                                                                                     bench_function, y_data, n, n_plot,
-                                                                                    grid_min, X_test, creator, best,
+                                                                                    n_data, grid_min, X_test, creator, best,
+                                                                                    df_bounds, grid, part_ant,
                                                                                     init=True)
     n.append(n_data)
     part_ant, distances = distance(n_data, part, part_ant, distances, init=True)
@@ -66,8 +68,9 @@ for g in range(GEN):
     for part in pop:
         x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, part, x_p, y_p, x_g, y_g,
                                                                                         bench_function, y_data, n,
-                                                                                        n_plot, grid_min, X_test,
-                                                                                        creator, best, init=False)
+                                                                                        n_plot, n_data, grid_min, X_test,
+                                                                                        creator, best, df_bounds, grid,
+                                                                                        part_ant, init=False)
         part_ant, distances = distance(n_data, part, part_ant, distances, init=False)
         n_data += 1.0
         if n_data > 4.0:
@@ -88,7 +91,7 @@ for g in range(GEN):
     print(logbook.stream)
 
 x_a, y_a, x_ga, y_ga = arrays(x_p, y_p, x_g, y_g)
-savexlsx(MSE_data, sigma_data, mu_data, distances, e1, e2, e3, e4)
-plot_gaussian(x_ga, y_ga, n, mu_data, sigma_data, X_test, grid)
-plot_benchmark(bench_function)
+# savexlsx(MSE_data, sigma_data, mu_data, distances, e1, e2, e3, e4)
+plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid)
+plot_benchmark(xs, ys, grid, bench_function, X_test)
 plot_error(MSE_data, it, GEN)

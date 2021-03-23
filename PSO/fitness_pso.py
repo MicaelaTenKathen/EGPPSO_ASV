@@ -1,21 +1,22 @@
 from Data_scripts.data_treat import new_limit
 
 
-def part_fitness(g, part, x_p, y_p, x_g, y_g, bench_function, y_data, n, n_plot, grid_min, X_test, creator, best,
-                 init=True):
+def part_fitness(g, part, x_p, y_p, x_g, y_g, bench_function, y_data, n, n_plot, n_data, grid_min, X_test, creator, best,
+                 df_bounds, grid, part_ant, init=True):
     """
 
     :rtype: object
     :type creator: object
     """
-    part = new_limit(part, load_file=True)
+    part = new_limit(part, df_bounds, grid, part_ant, n_data)
     x_p.append(int(part[0]))
     y_p.append(int(part[1]))
     x_bench = int(part[0])
     y_bench = int(part[1])
     for i in range(len(X_test)):
-        if X_test[i, 0] == x_bench and X_test[i, 1] == y_bench:
+        if X_test[i][0] == x_bench and X_test[i][1] == y_bench:
             part.fitness.values = [bench_function[i]]
+            break
     y_data.append(part.fitness.values)
     if init:
         part.best = creator.Particle(part)

@@ -22,8 +22,7 @@ def arrays(x_p, y_p, x_g, y_g):
     return x_a, y_a, x_ga, y_ga
 
 
-def new_limit(part, load_file=True):
-    df_bounds, grid, available, no_available = map_bound(load_file=load_file)
+def new_limit(part, df_bounds, grid, part_ant, n_data):
     df_bounds = np.array(df_bounds)
     x_int = int(part[0])
     y_int = int(part[1])
@@ -63,8 +62,21 @@ def new_limit(part, load_file=True):
             elif x_int > bn[-1, 1]:
                 part[0] = bn[-1, 1]
             else:
+                if n_data == 1.0:
+                    ant = part_ant[0]
+                elif n_data == 2.0:
+                    ant = part_ant[2]
+                elif n_data == 3.0:
+                    ant = part_ant[4]
+                elif n_data == 4.0:
+                    ant = part_ant[6]
                 for i in range(len(bn)):
-                    if x_int < bn[i, 0]:
+                    if bn[i, 0] < ant < bn[i, 1]:
+                        if abs(ant - bn[i, 0]) > abs(ant - bn[i, 1]):
+                            part[0] = bn[i, 1]
+                        else:
+                            part[0] = bn[i, 0]
+                    elif x_int < bn[i, 0]:
                         if abs(part[0] - bn[i, 0]) > abs(part[0] - bn[i - 1, 1]):
                             part[0] = bn[i - 1, 1]
                         else:
@@ -72,12 +84,12 @@ def new_limit(part, load_file=True):
     return part
 
 
-def Z_var_mean(mu_data, sigma_data, X_test, grid):
-    Z_var = np.zeros[grid.shape[0], grid.shape[1]]
-    Z_mean = np.zeros[grid.shape[0], grid.shape[1]]
+def Z_var_mean(mu, sigma, X_test, grid):
+    Z_var = np.zeros([grid.shape[0], grid.shape[1]])
+    Z_mean = np.zeros([grid.shape[0], grid.shape[1]])
     for i in range(len(X_test)):
-        Z_var[X_test[i, 0], X_test[i, 1]] = sigma_data[i]
-        Z_mean[X_test[i, 0], X_test[i, 1]] = mu_data[i]
-    Z_var = Z_var.replace(0, np.nan)
-    Z_mean = Z_mean.replace(0, np.nan)
+        Z_var[X_test[i][0], X_test[i][1]] = sigma[i]
+        Z_mean[X_test[i][0], X_test[i][1]] = mu[i]
+    Z_var[Z_var == 0] = np.nan
+    Z_mean[Z_mean == 0] = np.nan
     return Z_var, Z_mean

@@ -1,4 +1,5 @@
 import openpyxl
+import numpy as np
 
 
 def savexlsx(MSE_data, sigma_data, mu_data, distances, e1, e2, e3, e4):

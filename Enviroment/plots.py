@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from Data_scripts.data_treat import Z_var_mean
-
+import numpy as np
+from Benchmark.bench import create_map
 
 def plot_evolucion(log):
     gen = log.select("gen")
@@ -32,37 +33,52 @@ def plot_movimiento(x_a, y_a):
     plt.close()
 
 
-def plot_gaussian(x_ga, y_ga, n, mu_data, sigma_data, X_test, grid):
-    Z_var, Z_mean = Z_var_mean(mu_data, sigma_data, X_test, grid)
+def bench_plot(xs, ys, bench_function, X_test, grid):
+    plot = np.zeros([xs, ys])
+    for i in range(len(X_test)):
+        plot[X_test[i][0], X_test[i][1]] = bench_function[i]
+    plot[grid == 0] = np.nan
+    benchma_plot = plot.T
+    return benchma_plot
 
-    fig, axs = plt.subplots(2, 1, figsize=(3.5, 6))
+
+def plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid):
+    Z_var, Z_mean = Z_var_mean(mu, sigma, X_test, grid)
+
+    fig, axs = plt.subplots(1, 2, figsize=(10, 5))
 
     im1 = axs[0].scatter(x_ga, y_ga, c=n, cmap="gist_rainbow", marker='.')
 
-    im2 = axs[0].imshow(Z_var, interpolation='bilinear', origin='lower', cmap="viridis")
+    im2 = axs[0].imshow(Z_var.T, interpolation='bilinear', origin='lower', cmap="viridis")
     plt.colorbar(im2, ax=axs[0], format='%.2f', label='σ', shrink=1.0)
     # axs[0].set_xlabel("x [m]")
     axs[0].set_ylabel("y [m]")
     axs[0].set_aspect('equal')
+    axs[0].set_ylim([ys, 0])
     axs[0].grid(True)
 
-    im3 = axs[1].imshow(Z_mean, interpolation='bilinear', origin='lower', cmap="jet")
+    im3 = axs[1].imshow(Z_mean.T, interpolation='bilinear', origin='lower', cmap="jet")
     plt.colorbar(im3, ax=axs[1], format='%.2f', label='µ', shrink=1.0)
     axs[1].set_xlabel("x [m]")
     axs[1].set_ylabel("y [m]")
+    axs[1].set_ylim([ys, 0])
     axs[1].set_aspect('equal')
     axs[1].grid(True)
 
+    # fig.savefig("STD, MEAN", dpi=200)
     plt.show()
 
 
-def plot_benchmark(bench_function):
+def plot_benchmark(xs, ys, grid, bench_function, X_test):
+    benchmark_plot = bench_plot(xs, ys, bench_function, X_test, grid)
     plt.figure(2)
-    im4 = plt.imshow(bench_function, interpolation='bilinear', origin='lower', cmap="jet")
+    im4 = plt.imshow(benchmark_plot, interpolation='bilinear', origin='lower', cmap="jet")
     plt.colorbar(im4, format='%.2f', shrink=1)
     plt.xlabel("x [m]")
     plt.ylabel("y [m]")
+    plt.ylim([ys, 0])
     plt.grid(True)
+    # plt.savefig("Benchmark plot", dpi=200)
     plt.show()
 
 
@@ -74,4 +90,5 @@ def plot_error(MSE_data, it, GEN):
     plt.xlim([0, GEN])
     plt.grid(True)
     plt.title("Mean Square Error")
+    # plt.savefig("MSE", dpi=200)
     plt.show()

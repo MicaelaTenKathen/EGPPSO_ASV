@@ -1,3 +1,8 @@
+"""
+Benchmark functions map #todo ver nombre, preguntar
+author: Federico Peralta
+"""
+
 from sys import path
 
 import numpy as np
@@ -99,7 +104,8 @@ def create_map(grid, resolution, obstacles_on=False, randomize_shekel=False, sen
         stdz = np.nanstd(_z)
         _z = (_z - meanz) / stdz
 
-        with open('/Data/shww.npy', 'wb') as g:
+        with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
+                  'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/shww.npy', 'wb') as g:
             np.save(g, _z)
         return _z
 
@@ -131,3 +137,17 @@ def get_init_pos4(n=1, rotate_rnd=True, expand=False, map_data=None):
         initial_positions[:, 0] += 10 * cosine
         initial_positions[:, 1] += 10 * sine
     return np.round(initial_positions).astype(np.int)
+
+
+# grid, resolution = black_white(1, 1000, 1500)
+# _z = create_map(grid, resolution, obstacles_on=False, randomize_shekel=False, sensor="", no_maxima=10,
+#                load_from_db=True, file=0)
+# _z = bench_plot(_z, grid)
+# plt.figure(2)
+# im4 = plt.imshow(_z, interpolation='bilinear', origin='lower', cmap="jet")
+# plt.colorbar(im4, format='%.2f', shrink=1)
+# plt.xlabel("x [m]")
+# plt.ylabel("y [m]")
+# plt.ylim([1500, 0])
+# plt.grid(True)
+# plt.show()

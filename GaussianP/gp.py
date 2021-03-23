@@ -3,10 +3,9 @@ from sklearn.gaussian_process.kernels import RBF
 
 
 def initGP(leng_scale, sigma_kernel, simple_equation=True):
-    if simple_equation:
-        ker = RBF(length_scale=leng_scale)
-    else:
-        ker = sigma_kernel * RBF(length_scale=leng_scale)
+    ker = RBF(length_scale=leng_scale)
+    # else:
+    #     ker = sigma_kernel * RBF(length_scale=leng_scale)
 
     # j = 0
     #
@@ -64,9 +63,14 @@ def gaussian_regression(x_p, y_p, y_data, X_test, gpr):
 
 def gpr_value(x_bench, y_bench, X_test, sigma, mu, sigma_data, mu_data):
     for i in range(len(X_test)):
-        if X_test[i, 0] == x_bench and X_test[i, 1] == y_bench:
-            mu_value = mu[i]
-            sigma_value = sigma[i]
-    sigma_data.append(sigma_value)
-    mu_data.append(mu_value)
+        di = X_test[i]
+        dix = di[0]
+        diy = di[1]
+        if dix == x_bench and diy == y_bench:
+            mu_data.append(mu[i])
+            sigma_data.append(sigma[i])
+    # sigma_data.append(sigma_value)
+    # mu_data.append(float(mu_value))
+    # for i in range(len(mu_data)):
+    #     mu_data[i] = float(mu_data[i])
     return sigma_data, mu_data

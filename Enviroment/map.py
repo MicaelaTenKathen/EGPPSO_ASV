@@ -3,16 +3,14 @@ import numpy as np
 
 
 def black_white(resolution, xs, ys):
-    im = Image.open(r'C:\Users\mcjara\Downloads\snazzy-image (3).PNG')
+    im = Image.open(r'C:\Users\mcjara\Downloads\snazzy-image-prueba.png')
     nim = im.resize((xs, ys))
-    xn = nim.size[0]
-    yn = nim.size[1]
-    array = np.zeros((xn, yn))
-    img = Image.new('RGB', (xn, yn))
-    i = 0
-    while i < xn:
-        j = 0
-        while j < yn:
+    array = np.zeros((xs, ys))
+    img = Image.new('RGB', (xs, ys))
+    j = 0
+    while j < ys:
+        i = 0
+        while i < xs:
             r, g, b = nim.getpixel((i, j))
             p = (r * 0.3 + g * 0.59 + b * 0.11)
             gray = int(p)
@@ -25,8 +23,8 @@ def black_white(resolution, xs, ys):
             pixel = tuple([color, color, color])
             img.putpixel((i, j), pixel)
             array[i, j] = int(bit)
-            j += 1
-        i += 1
+            i += 1
+        j += 1
     # img.show()
     # print(array[xi, yi])
     # img.save('map_ypacarai.PNG')
@@ -34,9 +32,11 @@ def black_white(resolution, xs, ys):
     return array, resolution
 
 
-def map_values(grid):
-    grid_max_x = grid.shape[0]
-    grid_max_y = grid.shape[1]
+# array = black_white(1, 100, 150)
+
+def map_values(xs, ys):
+    grid_max_x = xs
+    grid_max_y = ys
 
     grid_min = 0
 

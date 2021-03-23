@@ -12,12 +12,12 @@ def initPSO():
     
     :rtype: object
     """
-    creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
+    creator.create("FitnessMin", base.Fitness, weights=(1.0,))
     creator.create("Particle", np.ndarray, fitness=creator.FitnessMin, speed=None, smin=None, smax=None, best=None)
     creator.create("BestGP", np.ndarray, fitness=creator.FitnessMin)
 
 
-def generate(pmin, pmax, smin=-2, smax=2, size=2):
+def generate(pmin, pmax, smin=0, smax=2, size=2):
     """
 
     :rtype: object
@@ -78,12 +78,12 @@ def updateParticle(part, best, gp_best, mu_best, g, GEN, c1, c2, c3, c4, wmin=0.
     return part
 
 
-def tool(grid_min, grid_max, generate, updateParticle, size=2, smin=-2, smax=2, wmin=0.4, wmax=0.9):
+def tool(grid_min, grid_max, generate, updateParticle, size=2, smin=0, smax=2, wmin=0.4, wmax=0.9):
     toolbox = base.Toolbox()
     toolbox.register("particle", generate, size=size, pmin=grid_min, pmax=grid_max, smin=smin, smax=smax)
     toolbox.register("population", tools.initRepeat, list, toolbox.particle)
     toolbox.register("update", updateParticle, wmin=wmin, wmax=wmax)
-    toolbox.register("evaluate", benchmarks.bohachevsky)
+    # toolbox.register("evaluate", benchmarks.bohachevsky)
     return toolbox
 
 

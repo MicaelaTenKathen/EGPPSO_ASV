@@ -5,8 +5,7 @@ from sys import path
 from Benchmark.bench import create_map
 
 
-def map_bound(load_file=False, file=0):
-    global df_bounds
+def map_bound(xs, ys, load_file=False, file=0):
     if load_file:
         with open(path[-1] + '/Data/bounds.npy'.format(file), 'rb') as bn:
             df_bounds = np.load(bn)
@@ -17,14 +16,14 @@ def map_bound(load_file=False, file=0):
         with open(path[-1] + '/Data/available.npy'.format(file), 'rb') as av:
             available = np.load(av)
 
-        with open(path[-1] + '/Data/no_available.npy'.format(file), 'rb') as nav:
-            no_available = np.load(nav)
+        # with open(path[-1] + '/Data/no_available.npy'.format(file), 'rb') as nav:
+        #     no_available = np.load(nav)
 
-        return df_bounds, grid, available, no_available
+        return df_bounds, grid, available
 
     else:
-        grid, resolution = black_white(1, 1000, 1500)
-        available, no_available, first, last = list(), list(), list(), list()
+        grid, resolution = black_white(1, xs, ys)
+        available, first, last = list(), list(), list()
         bound = True
         confirm = list()
         index, first_x, last_x, all_y = list(), list(), list(), list()
@@ -41,7 +40,7 @@ def map_bound(load_file=False, file=0):
                     if not bound:
                         last.append(grid_ant)
                         bound = True
-                    no_available.append([i, j])
+                    # no_available.append([i, j])
 
         for i in range(len(first)):
             if first[i][1] == last[i][1]:
@@ -70,11 +69,11 @@ def map_bound(load_file=False, file=0):
                   'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/available.npy', 'wb') as av:
             np.save(av, available)
 
-        with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
-                  'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/no_available.npy', 'wb') as nav:
-            np.save(nav, no_available)
+        # with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
+        #           'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/no_available.npy', 'wb') as nav:
+        #     np.save(nav, no_available)
 
-        return df_bounds, grid, available, no_available
+        return df_bounds, grid, available
 
 
 def interest_area(load_file=False, file=0):
@@ -83,7 +82,7 @@ def interest_area(load_file=False, file=0):
             return np.load(ar)
 
     else:
-        df_bounds, grid, available, no_available = map_bound(load_file=True)
+        grid = map_bound(load_file=False)
         _z = create_map(grid, 1, obstacles_on=False, randomize_shekel=False, sensor="", no_maxima=10,
                         load_from_db=True, file=0)
         for j in range(len(grid[1])):
@@ -99,7 +98,7 @@ def interest_area(load_file=False, file=0):
         return _z2
 
 
-df_bounds, grid, available, no_available = map_bound(load_file=False, file=0)
+# df_bounds, grid, available, no_available = map_bound(load_file=False, file=0)
 # new_grid = new_grid.replace(0, np.nan)
 # new_grid = pd.DataFrame.to_numpy(new_grid)
 
