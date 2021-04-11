@@ -39,7 +39,7 @@ def bench_plot(xs, ys, bench_function, X_test, grid):
         plot[X_test[i][0], X_test[i][1]] = bench_function[i]
     plot[grid == 0] = np.nan
     benchma_plot = plot.T
-    return benchma_plot
+    return plot, benchma_plot
 
 
 def plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid):
@@ -70,7 +70,7 @@ def plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid):
 
 
 def plot_benchmark(xs, ys, grid, bench_function, X_test):
-    benchmark_plot = bench_plot(xs, ys, bench_function, X_test, grid)
+    plot, benchmark_plot = bench_plot(xs, ys, bench_function, X_test, grid)
     plt.figure(2)
     im4 = plt.imshow(benchmark_plot, interpolation='bilinear', origin='lower', cmap="jet")
     plt.colorbar(im4, format='%.2f', shrink=1)
@@ -80,6 +80,7 @@ def plot_benchmark(xs, ys, grid, bench_function, X_test):
     plt.grid(True)
     # plt.savefig("Benchmark plot", dpi=200)
     plt.show()
+    return plot
 
 
 def plot_error(MSE_data, it, GEN):

@@ -1,10 +1,10 @@
 from PIL import Image
 import numpy as np
-from sys import path
 
 
 def black_white(resolution, xs, ys):
-    im = Image.open(path[-1] + '/Image/snazzy-image-prueba.png'.format(0))
+    im = Image.open(r'C:\Users\mcjara\OneDrive - Universidad Loyola Andalucía\Documentos\PycharmProjects\PSO_ASVs\Image'
+                    r'\snazzy-image-prueba.png')
     nim = im.resize((xs, ys))
     array = np.zeros((xs, ys))
     img = Image.new('RGB', (xs, ys))

@@ -3,6 +3,8 @@ import numpy as np
 
 
 def savexlsx(MSE_data, sigma_data, mu_data, distances, e1, e2, e3, e4):
+    for i in range(len(mu_data)):
+        mu_data[i] = float(mu_data[i])
     wb1 = openpyxl.Workbook()
     wb2 = openpyxl.Workbook()
     wb3 = openpyxl.Workbook()
