@@ -17,8 +17,6 @@ from Data_scripts.data_save import savexlsx
 from Enviroment.map import *
 from Enviroment.plots import *
 
-from Hyperparameter.tuning import *
-
 
 xs, ys = 100, 150
 
@@ -30,10 +28,10 @@ gp_best, mu_best = [0, 0], [0, 0]
 part_dist, part_ant, distances, n_data, n_plot = np.zeros(8), np.zeros(8), np.zeros(4), float(1), float(1)
 benchmark_data, n, sigma_data, mu_data, MSE_data, it = list(), list(), list(), list(), list(), list()
 g, samples = 0, 0
-x_p, y_p, x_g, y_g, y_data = list(), list(), list(), list(), list()
+x_p, y_p, x_g, y_g, y_data, part_data = list(), list(), list(), list(), list(), list()
 
-c1, c2, c3, c4, GEN, t, e1, e2, e3, e4 = 2, 2, 0, 0, 10, 10, 'Pruebas/Error.xlsx', 'Pruebas/Sigma.xlsx', 'Pruebas/Mu' \
-                                                                                                          '.xlsx', \
+c1, c2, c3, c4, GEN, t, e1, e2, e3, e4 = 2, 2, 0, 0, 50, 10, 'Pruebas/Error.xlsx', 'Pruebas/Sigma.xlsx', 'Pruebas/Mu' \
+                                                                                                         '.xlsx', \
                                          'Pruebas/Distance.xlsx'
 initPSO()
 generate(grid_min, grid_max)
@@ -47,9 +45,12 @@ ker = RBF(length_scale=0.6)
 gpr = GaussianProcessRegressor(kernel=ker, alpha=1 ** 2)  # alpha = noise**2
 
 for part in pop:
-    x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, part, x_p, y_p, x_g, y_g,
-                                                                                    bench_function, y_data, n, n_plot,
-                                                                                    n_data, grid_min, X_test, creator, best,
+    x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, part, part_data, x_p, y_p,
+                                                                                    x_g, y_g,
+                                                                                    bench_function, y_data, n,
+                                                                                    n_plot,
+                                                                                    n_data, grid_min, X_test,
+                                                                                    creator, best,
                                                                                     df_bounds, grid, part_ant,
                                                                                     init=True)
     n.append(n_data)
@@ -68,10 +69,13 @@ for part in pop:
 
 for g in range(GEN):
     for part in pop:
-        x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, part, x_p, y_p, x_g, y_g,
+        x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, part, part_data, x_p,
+                                                                                        y_p, x_g, y_g,
                                                                                         bench_function, y_data, n,
-                                                                                        n_plot, n_data, grid_min, X_test,
-                                                                                        creator, best, df_bounds, grid,
+                                                                                        n_plot, n_data, grid_min,
+                                                                                        X_test,
+                                                                                        creator, best, df_bounds,
+                                                                                        grid,
                                                                                         part_ant, init=False)
         part_ant, distances = distance(n_data, part, part_ant, distances, init=False)
         n_data += 1.0
@@ -82,7 +86,6 @@ for g in range(GEN):
         samples += 1
     MSE_data, it = mse(g, y_data, mu_data, samples, MSE_data, it, init=False)
     if g >= t:
-        c1, c2, c3, c4 = hyper_tuning()
         sigma_max, index_x, index_y = sigmamax(X_test, sigma)
         mu_max, index_xmu, index_ymu = mumax(X_test, mu)
         gp_best = gp_generate(index_x, index_y)

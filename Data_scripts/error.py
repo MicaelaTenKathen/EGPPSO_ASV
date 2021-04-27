@@ -13,4 +13,4 @@ def mse(g, y_data, mu_data, samples, MSE_data, it, init=True):
         it.append(g)
     else:
         it.append(g + 1)
-    return MSE_data, it
+    return MSE_data, it, MSE

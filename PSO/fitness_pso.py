@@ -1,7 +1,7 @@
 from Data_scripts.data_treat import new_limit
 
 
-def part_fitness(g, part, x_p, y_p, x_g, y_g, bench_function, y_data, n, n_plot, n_data, grid_min, X_test, creator, best,
+def part_fitness(g, part, part_data, x_p, y_p, x_g, y_g, bench_function, y_data, n, n_plot, n_data, grid_min, X_test, creator, best,
                  df_bounds, grid, part_ant, init=True):
     """
 
