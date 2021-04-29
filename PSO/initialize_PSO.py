@@ -29,18 +29,6 @@ def generate(pmin, pmax, smin=0, smax=2, size=2):
     return part
 
 
-def gp_generate(index_1x, index_1y):
-    """
-
-    :param index_x: 
-    :param index_y: 
-    :return: 
-    """
-    best_1 = [index_1x, index_1y]
-    best_2 = np.array(best_1)
-    return best_2
-
-
 def updateParticle(part, best, gp_best, mu_best, g, GEN, c1, c2, c3, c4, wmin=0.4, wmax=0.9):
     """
 

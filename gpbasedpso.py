@@ -30,7 +30,7 @@ benchmark_data, n, sigma_data, mu_data, MSE_data, it = list(), list(), list(), l
 g, samples = 0, 0
 x_p, y_p, x_g, y_g, y_data, part_data = list(), list(), list(), list(), list(), list()
 
-c1, c2, c3, c4, GEN, t, e1, e2, e3, e4 = 2, 2, 0, 0, 50, 10, 'Pruebas/Error.xlsx', 'Pruebas/Sigma.xlsx', 'Pruebas/Mu' \
+c1, c2, c3, c4, GEN, t, e1, e2, e3, e4 = 2, 2, 0, 0, 400, 10, 'Pruebas/Error.xlsx', 'Pruebas/Sigma.xlsx', 'Pruebas/Mu' \
                                                                                                          '.xlsx', \
                                          'Pruebas/Distance.xlsx'
 initPSO()
@@ -40,7 +40,7 @@ random.seed(26)
 pop, best = swarm(toolbox, 4)
 stats, logbook = statistic()
 
-ker = RBF(length_scale=0.6)
+ker = RBF(length_scale=0.5)
 
 gpr = GaussianProcessRegressor(kernel=ker, alpha=1 ** 2)  # alpha = noise**2
 
@@ -86,6 +86,7 @@ for g in range(GEN):
         samples += 1
     MSE_data, it = mse(g, y_data, mu_data, samples, MSE_data, it, init=False)
     if g >= t:
+        c1, c2, c3, c4 = 1, 1, 3, 3
         sigma_max, index_x, index_y = sigmamax(X_test, sigma)
         mu_max, index_xmu, index_ymu = mumax(X_test, mu)
         gp_best = gp_generate(index_x, index_y)
@@ -95,6 +96,7 @@ for g in range(GEN):
     logbook.record(gen=g, evals=len(pop), **stats.compile(pop))
     print(logbook.stream)
 
+print(MSE_data[-1])
 x_a, y_a, x_ga, y_ga = arrays(x_p, y_p, x_g, y_g)
 savexlsx(MSE_data, sigma_data, mu_data, distances, e1, e2, e3, e4)
 plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid)

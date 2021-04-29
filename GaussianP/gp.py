@@ -49,7 +49,6 @@ def data(x_p, y_p, y_data):
 
 def gaussian_regression(x_p, y_p, y_data, X_test, gpr):
     x_a, y_a, x_train, y_train = data(x_p, y_p, y_data)
-
     gpr.fit(x_train, y_train)
     gpr.get_params()
 
