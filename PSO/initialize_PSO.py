@@ -12,9 +12,9 @@ def initPSO():
     
     :rtype: object
     """
-    creator.create("FitnessMin", base.Fitness, weights=(1.0,))
-    creator.create("Particle", np.ndarray, fitness=creator.FitnessMin, speed=None, smin=None, smax=None, best=None)
-    creator.create("BestGP", np.ndarray, fitness=creator.FitnessMin)
+    creator.create("FitnessMax", base.Fitness, weights=(1.0,))
+    creator.create("Particle", np.ndarray, fitness=creator.FitnessMax, speed=None, smin=None, smax=None, best=None)
+    creator.create("BestGP", np.ndarray, fitness=creator.FitnessMax)
 
 
 def generate(pmin, pmax, smin=0, smax=2, size=2):

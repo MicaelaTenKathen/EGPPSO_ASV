@@ -35,7 +35,6 @@ def new_limit(part, df_bounds, grid, part_ant, n_data):
             if int(y_int) == df_bounds[i, 2]:
                 s += 1
                 bn.append(df_bounds[i])
-        bn = np.array(bn)
         print(bn)
         if s == 0:
             if y_int < df_bounds[0, 2]:
@@ -52,6 +51,7 @@ def new_limit(part, df_bounds, grid, part_ant, n_data):
                         s += 1
                         bn.append(df_bounds[i])
                         bn = np.array(bn)
+        bn = np.array(bn)
         if len(bn) <= 1:
             if x_int < bn[0, 0]:
                 part[0] = bn[0, 0]

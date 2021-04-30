@@ -18,12 +18,8 @@ from Enviroment.map import *
 from Enviroment.plots import *
 
 from skopt.utils import use_named_args
-from skopt.space import Real, Integer, Categorical
+from skopt.space import Integer, Categorical
 from skopt import gp_minimize
-import skopt
-
-from skopt.plots import plot_convergence, plot_objective
-
 
 dim_c1 = Integer(name="c1", low=0, high=4)
 dim_c2 = Integer(name="c2", low=0, high=4)
@@ -58,7 +54,7 @@ def model_psogp(c1, c2, c3, c4, leng_scale):
     c41 = int(c4)
     # t = int(t)
     leng_scale = float(leng_scale)
-    global model_psogp, sigma, mu
+    global model_psogp, sigma, mu, n_plot, n_data
     xs, ys = 100, 150
 
     bench_function, X_test, grid, df_bounds = available_bench(xs, ys, load_file=False, load_from_db=False)
@@ -82,7 +78,7 @@ def model_psogp(c1, c2, c3, c4, leng_scale):
         stats, logbook = statistic()
 
         gp_best, mu_best = [0, 0], [0, 0]
-        # part_dist, part_ant, distances, n_data, n_plot = np.zeros(8), np.zeros(8), np.zeros(4), float(1), float(1)
+        part_dist, part_ant, distances, n_data, n_plot = np.zeros(8), np.zeros(8), np.zeros(4), float(1), float(1)
         benchmark_data, n, sigma_data, mu_data, MSE_data, it = list(), list(), list(), list(), list(), list()
         g, samples = 0, 0
         x_p, y_p, x_g, y_g, y_data, part_data, x_train, y_train = list(), list(), list(), list(), list(), list(), list(), list()
@@ -100,10 +96,10 @@ def model_psogp(c1, c2, c3, c4, leng_scale):
                                                                                             n_plot,
                                                                                             n_data, grid_min, X_test,
                                                                                             creator, best,
-                                                                                            df_bounds, grid,
+                                                                                            df_bounds, grid, part_ant,
                                                                                             init=True)
             n.append(n_data)
-            # part_ant, distances = distance(n_data, part, part_ant, distances, init=True)
+            part_ant, distances = distance(n_data, part, part_ant, distances, init=True)
             n_data += float(1)
             if n_data > 4.0:
                 n_data = float(1)
@@ -131,8 +127,9 @@ def model_psogp(c1, c2, c3, c4, leng_scale):
                                                                                                 X_test,
                                                                                                 creator, best,
                                                                                                 df_bounds,
-                                                                                                grid, init=False)
-                # part_ant, distances = distance(n_data, part, part_ant, distances, init=False)
+                                                                                                grid, part_ant,
+                                                                                                init=False)
+                part_ant, distances = distance(n_data, part, part_ant, distances, init=False)
                 n_data += 1.0
                 if n_data > 4.0:
                     n_data = float(1)
@@ -162,7 +159,7 @@ def model_psogp(c1, c2, c3, c4, leng_scale):
 
 search_result = gp_minimize(func=model_psogp,
                             dimensions=dimensions,
-                            n_calls=200,
+                            n_calls=100,
                             acq_func='EI',
                             x0=default_parameters)
 
