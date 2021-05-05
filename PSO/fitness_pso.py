@@ -1,14 +1,14 @@
 from Data_scripts.data_treat import new_limit
 
 
-def part_fitness(g, part, part_data, x_p, y_p, x_g, y_g, bench_function, y_data, n, n_plot, n_data, grid_min, X_test, creator, best,
+def part_fitness(g, xs, ys, part, part_data, x_p, y_p, x_g, y_g, bench_function, y_data, n, n_plot, n_data, grid_min, X_test, creator, best,
                  df_bounds, grid, part_ant, init=True):
     """
 
     :rtype: object
     :type creator: object
     """
-    part = new_limit(part, df_bounds, grid, part_ant, n_data)
+    part = new_limit(xs, ys, part, df_bounds, grid, part_ant, n_data)
     x_p.append(int(part[0]))
     y_p.append(int(part[1]))
     x_bench = int(part[0])

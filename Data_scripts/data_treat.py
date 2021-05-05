@@ -22,12 +22,16 @@ def arrays(x_p, y_p, x_g, y_g):
     return x_a, y_a, x_ga, y_ga
 
 
-def new_limit(part, df_bounds, grid, part_ant, n_data):
+def new_limit(xs, ys, part, df_bounds, grid, part_ant, n_data):
     df_bounds = np.array(df_bounds)
     x_int = int(part[0])
     y_int = int(part[1])
-    if x_int > grid.shape[0]:
-        x_int = grid.shape[0] - 1
+    if x_int >= xs:
+        part[0] = xs - 1
+        x_int = int(part[0])
+    if y_int >= ys:
+        part[1] = ys - 1
+        y_int = (part[1])
     if grid[x_int, y_int] == 0:
         s, n = 0, 0
         bn = list()
@@ -35,25 +39,22 @@ def new_limit(part, df_bounds, grid, part_ant, n_data):
             if int(y_int) == df_bounds[i, 2]:
                 s += 1
                 bn.append(df_bounds[i])
-        print(bn)
         if s == 0:
             if y_int < df_bounds[0, 2]:
                 part[1] = df_bounds[0, 2]
-                for i in range(len(df_bounds[2])):
-                    if df_bounds[i, 2] == int(df_bounds[0, 2]):
+                for i in range(len(df_bounds)):
+                    if df_bounds[i, 2] == int(part[1]):
                         s += 1
                         bn.append(df_bounds[i])
-                        bn = np.array(bn)
             else:
                 part[1] = df_bounds[-1, 2]
-                for i in range(len(df_bounds[2])):
-                    if df_bounds[i, 2] == int(df_bounds[-1, 2]):
+                for i in range(len(df_bounds)):
+                    if df_bounds[i, 2] == int(part[1]):
                         s += 1
                         bn.append(df_bounds[i])
-                        bn = np.array(bn)
         bn = np.array(bn)
         if len(bn) <= 1:
-            if x_int < bn[0, 0]:
+            if x_int <= bn[0, 0]:
                 part[0] = bn[0, 0]
             else:
                 part[0] = bn[0, 1]
@@ -82,6 +83,8 @@ def new_limit(part, df_bounds, grid, part_ant, n_data):
                             part[0] = bn[i - 1, 1]
                         else:
                             part[0] = bn[i, 0]
+    else:
+        part = part
     return part
 
 

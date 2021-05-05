@@ -18,8 +18,12 @@ from Enviroment.map import *
 from Enviroment.plots import *
 
 from skopt.utils import use_named_args
-from skopt.space import Integer, Categorical
+from skopt.space import Real, Integer, Categorical
 from skopt import gp_minimize
+import skopt
+
+from skopt.plots import plot_convergence, plot_objective
+
 
 dim_c1 = Integer(name="c1", low=0, high=4)
 dim_c2 = Integer(name="c2", low=0, high=4)
@@ -66,8 +70,8 @@ def model_psogp(c1, c2, c3, c4, leng_scale):
     initPSO()
     generate(grid_min, grid_max)
     toolbox = tool(grid_min, grid_max, generate, updateParticle)
-    seed_list = [7, 10, 15, 20, 22, 27, 30, 34, 35, 37, 40, 42, 45, 47, 50, 52, 55, 57, 60, 62, 64, 67, 68, 69, 70, 90,
-                 23032016, 20160323, 3232016, 24072021]
+    seed_list = [7, 10, 15, 20, 22, 27, 30, 34, 35, 37, 40, 42, 45, 47, 50, 52, 55, 57, 60, 62, 64, 67, 68, 70, 90, 95,
+                 120, 150, 200, 1000]
 
     array_MSE = list()
 
@@ -89,7 +93,7 @@ def model_psogp(c1, c2, c3, c4, leng_scale):
 
         for part in pop:
             c1, c2, c3, c4 = 2, 2, 0, 0
-            x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, part, part_data, x_p,
+            x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, xs, ys, part, part_data, x_p,
                                                                                             y_p,
                                                                                             x_g, y_g,
                                                                                             bench_function, y_data, n,
@@ -118,7 +122,7 @@ def model_psogp(c1, c2, c3, c4, leng_scale):
             else:
                 c1, c2, c3, c4 = c11, c21, c31, c41
             for part in pop:
-                x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, part, part_data, x_p,
+                x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, xs, ys, part, part_data, x_p,
                                                                                                 y_p, x_g, y_g,
                                                                                                 bench_function, y_data,
                                                                                                 n,
@@ -159,7 +163,7 @@ def model_psogp(c1, c2, c3, c4, leng_scale):
 
 search_result = gp_minimize(func=model_psogp,
                             dimensions=dimensions,
-                            n_calls=100,
+                            n_calls=200,
                             acq_func='EI',
                             x0=default_parameters)
 
