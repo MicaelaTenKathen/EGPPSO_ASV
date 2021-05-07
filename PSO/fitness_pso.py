@@ -1,7 +1,7 @@
 from Data_scripts.data_treat import new_limit
 
 
-def part_fitness(g, xs, ys, part, part_data, x_p, y_p, x_g, y_g, bench_function, y_data, n, n_plot, n_data, grid_min, X_test, creator, best,
+def part_fitness(g, GEN, xs, ys, part, part_data, x_p, y_p, x_g, y_g, bench_function, y_data, n, n_plot, n_data, grid_min, X_test, creator, best,
                  df_bounds, grid, part_ant, init=True):
     """
 
@@ -22,16 +22,19 @@ def part_fitness(g, xs, ys, part, part_data, x_p, y_p, x_g, y_g, bench_function,
         part.best = creator.Particle(part)
         part.best.fitness.values = part.fitness.values
         x_gap = int(part[0]) + abs(grid_min)
-        y_gap = int(part[1]) + + abs(grid_min)
+        y_gap = int(part[1]) + abs(grid_min)
+        n.append(n_plot)
         x_g.append(x_gap)
         y_g.append(y_gap)
+        if n_plot > 4:
+            n_plot = float(1)
     else:
-        if g % 10 == 0:
+        if g == GEN - 1:
             x_gap = int(part[0]) + abs(grid_min)
             y_gap = int(part[1]) + abs(grid_min)
             x_g.append(x_gap)
             y_g.append(y_gap)
-            n.append(n_plot)
+            n.append(n_data)
             n_plot += float(1)
             if n_plot > 4:
                 n_plot = float(1)

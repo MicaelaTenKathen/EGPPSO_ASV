@@ -29,11 +29,11 @@ dim_c1 = Integer(name="c1", low=0, high=4)
 dim_c2 = Integer(name="c2", low=0, high=4)
 dim_c3 = Integer(name="c3", low=0, high=4)
 dim_c4 = Integer(name="c4", low=0, high=4)
-# dim_n = Categorical([10, 20, 30, 40, 50], name="t")
+dim_n = Categorical([10, 20, 30, 40, 50], name="t")
 dim_leng_scale = Categorical([0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], name="leng_scale")
-dimensions = [dim_c1, dim_c2, dim_c3, dim_c4, dim_leng_scale]
+dimensions = [dim_c1, dim_c2, dim_c3, dim_c4, dim_n, dim_leng_scale]
 dimensions_name = ["c1", "c2", "c3", "c4", "t", "leng_scale"]
-default_parameters = [1, 1, 3, 3, 0.5]
+default_parameters = [1, 1, 3, 3, 10, 0.5]
 
 variant_names = \
     {
@@ -51,12 +51,12 @@ variant_names = \
 
 
 @use_named_args(dimensions=dimensions)
-def model_psogp(c1, c2, c3, c4, leng_scale):
+def model_psogp(c1, c2, c3, c4, t, leng_scale):
     c11 = int(c1)
     c21 = int(c2)
     c31 = int(c3)
     c41 = int(c4)
-    # t = int(t)
+    t = int(t)
     leng_scale = float(leng_scale)
     global model_psogp, sigma, mu, n_plot, n_data
     xs, ys = 100, 150
@@ -65,105 +65,106 @@ def model_psogp(c1, c2, c3, c4, leng_scale):
 
     grid_min, grid_max, grid_max_x, grid_max_y = map_values(xs, ys)
 
-    t, GEN = 10, 400
+    GEN, e1, e2, e3, e4 = 400, 'Pruebas/Errorn50.xlsx', 'Pruebas/Sigman50.xlsx', 'Pruebas/Mun50' \
+                                                                                              '.xlsx', \
+                             'Pruebas/Distancen50.xlsx'
 
     initPSO()
     generate(grid_min, grid_max)
     toolbox = tool(grid_min, grid_max, generate, updateParticle)
-    seed_list = [7, 10, 15, 20, 22, 27, 30, 34, 35, 37, 40, 42, 45, 47, 50, 52, 55, 57, 60, 62, 64, 67, 68, 70, 90, 95,
-                 120, 150, 200, 1000]
+    seed_list = [7]
 
     array_MSE = list()
 
-    for i in range(len(seed_list)):
+    # for i in range(len(seed_list)):
 
-        random.seed(seed_list[i])
-        pop, best = swarm(toolbox, 4)
-        stats, logbook = statistic()
+    random.seed(seed_list[0])
+    pop, best = swarm(toolbox, 4)
+    stats, logbook = statistic()
 
-        gp_best, mu_best = [0, 0], [0, 0]
-        part_dist, part_ant, distances, n_data, n_plot = np.zeros(8), np.zeros(8), np.zeros(4), float(1), float(1)
-        benchmark_data, n, sigma_data, mu_data, MSE_data, it = list(), list(), list(), list(), list(), list()
-        g, samples = 0, 0
-        x_p, y_p, x_g, y_g, y_data, part_data, x_train, y_train = list(), list(), list(), list(), list(), list(), list(), list()
+    gp_best, mu_best = [0, 0], [0, 0]
+    part_dist, part_ant, distances, n_data, n_plot = np.zeros(8), np.zeros(8), np.zeros(4), float(1), float(1)
+    benchmark_data, n, sigma_data, mu_data, MSE_data, it = list(), list(), list(), list(), list(), list()
+    g, samples = 0, 0
+    x_p, y_p, x_g, y_g, y_data, part_data, x_train, y_train = list(), list(), list(), list(), list(), list(), list(), list()
 
-        ker = RBF(length_scale=leng_scale)
+    ker = RBF(length_scale=leng_scale)
 
-        gpr = GaussianProcessRegressor(kernel=ker, alpha=1 ** 2)  # alpha = noise**2
+    gpr = GaussianProcessRegressor(kernel=ker, alpha=1 ** 2)  # alpha = noise**2
 
-        for part in pop:
+    for part in pop:
+        c1, c2, c3, c4 = 2, 2, 0, 0
+        x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, xs, ys, part, part_data, x_p,
+                                                                                        y_p,
+                                                                                        x_g, y_g,
+                                                                                        bench_function, y_data, n,
+                                                                                        n_plot,
+                                                                                        n_data, grid_min, X_test,
+                                                                                        creator, best,
+                                                                                        df_bounds, grid, part_ant,
+                                                                                        init=True)
+        n.append(n_data)
+        part_ant, distances = distance(n_data, part, part_ant, distances, init=True)
+        n_data += float(1)
+        if n_data > 4.0:
+            n_data = float(1)
+        sigma, mu, x_a, y_a = gaussian_regression(x_p, y_p, y_data, X_test, gpr)
+        sigma_data, mu_data = gpr_value(x_bench, y_bench, X_test, sigma, mu, sigma_data, mu_data)
+        samples += 1
+
+    MSE_data, it = mse(g, y_data, mu_data, samples, MSE_data, it, init=True)
+
+    for part in pop:
+        toolbox.update(part, best, gp_best, mu_best, g, GEN, c1, c2, c3, c4)
+
+    for g in range(GEN):
+        if g < t:
             c1, c2, c3, c4 = 2, 2, 0, 0
+        else:
+            c1, c2, c3, c4 = c11, c21, c31, c41
+        for part in pop:
             x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, xs, ys, part, part_data, x_p,
-                                                                                            y_p,
-                                                                                            x_g, y_g,
-                                                                                            bench_function, y_data, n,
-                                                                                            n_plot,
-                                                                                            n_data, grid_min, X_test,
+                                                                                            y_p, x_g, y_g,
+                                                                                            bench_function, y_data,
+                                                                                            n,
+                                                                                            n_plot, n_data,
+                                                                                            grid_min,
+                                                                                            X_test,
                                                                                             creator, best,
-                                                                                            df_bounds, grid, part_ant,
-                                                                                            init=True)
-            n.append(n_data)
-            part_ant, distances = distance(n_data, part, part_ant, distances, init=True)
-            n_data += float(1)
+                                                                                            df_bounds,
+                                                                                            grid, part_ant,
+                                                                                            init=False)
+            part_ant, distances = distance(n_data, part, part_ant, distances, init=False)
+            n_data += 1.0
             if n_data > 4.0:
                 n_data = float(1)
             sigma, mu, x_a, y_a = gaussian_regression(x_p, y_p, y_data, X_test, gpr)
             sigma_data, mu_data = gpr_value(x_bench, y_bench, X_test, sigma, mu, sigma_data, mu_data)
             samples += 1
-
-        MSE_data, it = mse(g, y_data, mu_data, samples, MSE_data, it, init=True)
-
+        MSE_data, it = mse(g, y_data, mu_data, samples, MSE_data, it, init=False)
+        t = t
+        if g >= t:
+            gp_best, mu_best = sigmamax(X_test, sigma, mu)
         for part in pop:
             toolbox.update(part, best, gp_best, mu_best, g, GEN, c1, c2, c3, c4)
+        logbook.record(gen=g, evals=len(pop), **stats.compile(pop))
+        print(logbook.stream)
 
-        for g in range(GEN):
-            if g < t:
-                c1, c2, c3, c4 = 2, 2, 0, 0
-            else:
-                c1, c2, c3, c4 = c11, c21, c31, c41
-            for part in pop:
-                x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, xs, ys, part, part_data, x_p,
-                                                                                                y_p, x_g, y_g,
-                                                                                                bench_function, y_data,
-                                                                                                n,
-                                                                                                n_plot, n_data,
-                                                                                                grid_min,
-                                                                                                X_test,
-                                                                                                creator, best,
-                                                                                                df_bounds,
-                                                                                                grid, part_ant,
-                                                                                                init=False)
-                part_ant, distances = distance(n_data, part, part_ant, distances, init=False)
-                n_data += 1.0
-                if n_data > 4.0:
-                    n_data = float(1)
-                sigma, mu, x_a, y_a = gaussian_regression(x_p, y_p, y_data, X_test, gpr)
-                sigma_data, mu_data = gpr_value(x_bench, y_bench, X_test, sigma, mu, sigma_data, mu_data)
-                samples += 1
-            MSE_data, it = mse(g, y_data, mu_data, samples, MSE_data, it, init=False)
-            t = t
-            if g >= t:
-                gp_best, mu_best = sigmamax(X_test, sigma, mu)
-            for part in pop:
-                toolbox.update(part, best, gp_best, mu_best, g, GEN, c1, c2, c3, c4)
-            logbook.record(gen=g, evals=len(pop), **stats.compile(pop))
-            print(logbook.stream)
-
-        array_MSE.append(MSE_data[-1])
-    array_MSE = np.array(array_MSE)
-    mean_MSE = np.mean(array_MSE)
-    # x_a, y_a, x_ga, y_ga = arrays(x_p, y_p, x_g, y_g)
-    # savexlsx(MSE_data, sigma_data, mu_data, distances, e1, e2, e3, e4)
-    # plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid)
+    MSE = MSE_data[-1]
+    # array_MSE = np.array(array_MSE)
+    # mean_MSE = np.mean(array_MSE)
+    x_a, y_a, x_ga, y_ga = arrays(x_p, y_p, x_g, y_g)
+    savexlsx(MSE_data, sigma_data, mu_data, distances, e1, e2, e3, e4)
+    plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid, grid_min, part_ant)
     # plot_benchmark(xs, ys, grid, bench_function, X_test)
     # plot_error(MSE_data, it, GEN)
 
-    return mean_MSE
+    return MSE
 
 
 search_result = gp_minimize(func=model_psogp,
                             dimensions=dimensions,
-                            n_calls=200,
+                            n_calls=50,
                             acq_func='EI',
                             x0=default_parameters)
 

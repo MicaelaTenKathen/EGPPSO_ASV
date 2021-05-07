@@ -42,12 +42,24 @@ def bench_plot(xs, ys, bench_function, X_test, grid):
     return plot, benchma_plot
 
 
-def plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid):
+def plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid, grid_min, part_ant):
     Z_var, Z_mean = Z_var_mean(mu, sigma, X_test, grid)
 
     fig, axs = plt.subplots(1, 2, figsize=(10, 5))
 
     im1 = axs[0].scatter(x_ga, y_ga, c=n, cmap="gist_rainbow", marker='.')
+    p1x = list(map(lambda x: x + abs(grid_min), part_ant[0]))
+    p1y = list(map(lambda x: x + abs(grid_min), part_ant[1]))
+    axs[0].plot(p1x, p1y, 'r')
+    p2x = list(map(lambda x: x + abs(grid_min), part_ant[2]))
+    p2y = list(map(lambda x: x + abs(grid_min), part_ant[3]))
+    axs[0].plot(p2x, p2y, 'w')
+    p3x = list(map(lambda x: x + abs(grid_min), part_ant[4]))
+    p3y = list(map(lambda x: x + abs(grid_min), part_ant[5]))
+    axs[0].plot(p3x, p3y, 'c')
+    p4x = list(map(lambda x: x + abs(grid_min), part_ant[6]))
+    p4y = list(map(lambda x: x + abs(grid_min), part_ant[7]))
+    axs[0].plot(p4x, p4y, 'k')
 
     im2 = axs[0].imshow(Z_var.T, interpolation='bilinear', origin='lower', cmap="viridis")
     plt.colorbar(im2, ax=axs[0], format='%.2f', label='σ', shrink=1.0)

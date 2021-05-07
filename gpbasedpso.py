@@ -30,9 +30,8 @@ benchmark_data, n, sigma_data, mu_data, MSE_data, it = list(), list(), list(), l
 g, samples = 0, 0
 x_p, y_p, x_g, y_g, y_data, part_data = list(), list(), list(), list(), list(), list()
 
-c1, c2, c3, c4, GEN, t, e1, e2, e3, e4 = 2, 2, 0, 0, 400, 10, 'Pruebas/Error.xlsx', 'Pruebas/Sigma.xlsx', 'Pruebas/Mu' \
-                                                                                                         '.xlsx', \
-                                         'Pruebas/Distance.xlsx'
+c1, c2, c3, c4, GEN, t, e1, e2, e3, e4 = 2, 2, 0, 0, 600, 10, 'Pruebas/Error600.xlsx', 'Pruebas/Sigma600.xlsx', \
+                                         'Pruebas/Mu600.xlsx', 'Pruebas/Distance600.xlsx'
 initPSO()
 generate(grid_min, grid_max)
 toolbox = tool(grid_min, grid_max, generate, updateParticle)
@@ -45,14 +44,15 @@ ker = RBF(length_scale=0.5)
 gpr = GaussianProcessRegressor(kernel=ker, alpha=1 ** 2)  # alpha = noise**2
 
 for part in pop:
-    x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, part, part_data, x_p, y_p,
-                                                                                    x_g, y_g,
-                                                                                    bench_function, y_data, n,
-                                                                                    n_plot,
-                                                                                    n_data, grid_min, X_test,
-                                                                                    creator, best,
-                                                                                    df_bounds, grid, part_ant,
-                                                                                    init=True)
+    x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, GEN, xs, ys, part, part_data, x_p,
+                                                                                        y_p,
+                                                                                        x_g, y_g,
+                                                                                        bench_function, y_data, n,
+                                                                                        n_plot,
+                                                                                        n_data, grid_min, X_test,
+                                                                                        creator, best,
+                                                                                        df_bounds, grid, part_ant,
+                                                                                        init=True)
     n.append(n_data)
     part_ant, distances = distance(n_data, part, part_ant, distances, init=True)
     n_data += float(1)
@@ -69,14 +69,15 @@ for part in pop:
 
 for g in range(GEN):
     for part in pop:
-        x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, part, part_data, x_p,
-                                                                                        y_p, x_g, y_g,
+        x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, GEN, xs, ys, part, part_data, x_p,
+                                                                                        y_p,
+                                                                                        x_g, y_g,
                                                                                         bench_function, y_data, n,
-                                                                                        n_plot, n_data, grid_min,
-                                                                                        X_test,
-                                                                                        creator, best, df_bounds,
-                                                                                        grid,
-                                                                                        part_ant, init=False)
+                                                                                        n_plot,
+                                                                                        n_data, grid_min, X_test,
+                                                                                        creator, best,
+                                                                                        df_bounds, grid, part_ant,
+                                                                                        init=True)
         part_ant, distances = distance(n_data, part, part_ant, distances, init=False)
         n_data += 1.0
         if n_data > 4.0:
@@ -87,10 +88,7 @@ for g in range(GEN):
     MSE_data, it = mse(g, y_data, mu_data, samples, MSE_data, it, init=False)
     if g >= t:
         c1, c2, c3, c4 = 1, 1, 3, 3
-        sigma_max, index_x, index_y = sigmamax(X_test, sigma)
-        mu_max, index_xmu, index_ymu = mumax(X_test, mu)
-        gp_best = gp_generate(index_x, index_y)
-        mu_best = gp_generate(index_xmu, index_ymu)
+        gp_best, mu_best = sigmamax(X_test, sigma, mu)
     for part in pop:
         toolbox.update(part, best, gp_best, mu_best, g, GEN, c1, c2, c3, c4)
     logbook.record(gen=g, evals=len(pop), **stats.compile(pop))
@@ -99,6 +97,6 @@ for g in range(GEN):
 print(MSE_data[-1])
 x_a, y_a, x_ga, y_ga = arrays(x_p, y_p, x_g, y_g)
 savexlsx(MSE_data, sigma_data, mu_data, distances, e1, e2, e3, e4)
-plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid)
+plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid, grid_min, part_ant)
 plot = plot_benchmark(xs, ys, grid, bench_function, X_test)
 plot_error(MSE_data, it, GEN)

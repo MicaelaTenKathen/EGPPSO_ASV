@@ -22,7 +22,7 @@ def available_bench(xs, ys, load_file=True, load_from_db=True):
     _z = create_map(grid, 1, obstacles_on=False, randomize_shekel=False, sensor="", no_maxima=10,
                     load_from_db=load_from_db, file=0)
     for i in range(len(X_test)):
-        bench.append(_z[X_test[i][0], X_test[i][1]])
+        bench.append(_z[X_test[i][0], X_test[i][+1]])
 
     bench_function = np.array(bench)
     return bench_function, X_test, grid, df_bounds
