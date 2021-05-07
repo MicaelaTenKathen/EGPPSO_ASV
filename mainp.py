@@ -94,7 +94,7 @@ def model_psogp(c1, c2, c3, c4, t, leng_scale):
 
     for part in pop:
         c1, c2, c3, c4 = 2, 2, 0, 0
-        x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, xs, ys, part, part_data, x_p,
+        x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, GEN, xs, ys, part, part_data, x_p,
                                                                                         y_p,
                                                                                         x_g, y_g,
                                                                                         bench_function, y_data, n,
@@ -123,7 +123,7 @@ def model_psogp(c1, c2, c3, c4, t, leng_scale):
         else:
             c1, c2, c3, c4 = c11, c21, c31, c41
         for part in pop:
-            x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, xs, ys, part, part_data, x_p,
+            x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, GEN, xs, ys, part, part_data, x_p,
                                                                                             y_p, x_g, y_g,
                                                                                             bench_function, y_data,
                                                                                             n,
