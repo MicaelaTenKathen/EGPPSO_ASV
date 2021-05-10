@@ -47,7 +47,7 @@ ker = RBF(length_scale=0.5)
 gpr = GaussianProcessRegressor(kernel=ker, alpha=1 ** 2)  # alpha = noise**2
 
 for part in pop:
-    x_p, y_p, y_data, x_bench, y_bench, part, best, n_plot, bn = part_fitness(g, GEN, xs, ys, part, part_data, x_p,
+    x_p, y_p, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, GEN, xs, ys, part, part_data, x_p,
                                                                                         y_p, bench_function, y_data, n,
                                                                                         n_plot,
                                                                                         n_data, grid_min, X_test,
@@ -70,7 +70,7 @@ for part in pop:
 
 for g in range(GEN):
     for part in pop:
-        x_p, y_p, y_data, x_bench, y_bench, part, best, n_plot, bn = part_fitness(g, GEN, xs, ys, part, part_data, x_p,
+        x_p, y_p, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, GEN, xs, ys, part, part_data, x_p,
                                                                                         y_p,
                                                                                         bench_function, y_data, n,
                                                                                         n_plot,
@@ -94,6 +94,9 @@ for g in range(GEN):
         toolbox.update(part, best, gp_best, mu_best, g, GEN, c1, c2, c3, c4)
     logbook.record(gen=g, evals=len(pop), **stats.compile(pop))
     print(logbook.stream)
+    print(MSE_data[-1])
+    mean_dist = np.mean(np.array(distances))
+    print(mean_dist)
 
 print(MSE_data[-1])
 savexlsx(MSE_data, sigma_data, mu_data, distances, e1, e2, e3, e4)

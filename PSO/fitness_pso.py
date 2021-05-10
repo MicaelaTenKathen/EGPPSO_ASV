@@ -8,7 +8,7 @@ def part_fitness(g, GEN, xs, ys, part, part_data, x_p, y_p, bench_function, y_da
     :rtype: object
     :type creator: object
     """
-    part, bn = new_limit(g, xs, ys, part, df_bounds, grid, part_ant, n_data, init)
+    part = new_limit(g, xs, ys, part, df_bounds, grid, part_ant, n_data, init)
     x_p.append(int(part[0]))
     y_p.append(int(part[1]))
     x_bench = int(part[0])
@@ -44,4 +44,4 @@ def part_fitness(g, GEN, xs, ys, part, part_data, x_p, y_p, bench_function, y_da
     if best.fitness < part.fitness:
         best = creator.Particle(part)
         best.fitness.values = part.fitness.values
-    return x_p, y_p, y_data, x_bench, y_bench, part, best, n_plot, bn
+    return x_p, y_p, y_data, x_bench, y_bench, part, best, n_plot

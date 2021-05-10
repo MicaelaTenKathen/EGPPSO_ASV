@@ -79,7 +79,7 @@ def new_limit(g, xs, ys, part, df_bounds, grid, part_ant, n_data, init):
                             break
     else:
         part = part
-    return part, bn
+    return part
 
 
 def Z_var_mean(mu, sigma, X_test, grid):
