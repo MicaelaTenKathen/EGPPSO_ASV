@@ -30,8 +30,8 @@ benchmark_data, n, sigma_data, mu_data, MSE_data, it = list(), list(), list(), l
 g, samples = 0, 0
 x_p, y_p, x_g, y_g, y_data, part_data = list(), list(), list(), list(), list(), list()
 
-c1, c2, c3, c4, GEN, t, e1, e2, e3, e4 = 2, 2, 0, 0, 600, 10, 'Pruebas/Error600.xlsx', 'Pruebas/Sigma600.xlsx', \
-                                         'Pruebas/Mu600.xlsx', 'Pruebas/Distance600.xlsx'
+c1, c2, c3, c4, GEN, t, e1, e2, e3, e4 = 2, 2, 0, 0, 700, 10, 'Pruebas/Error400.xlsx', 'Pruebas/Sigma400.xlsx', \
+                                         'Pruebas/Mu400.xlsx', 'Pruebas/Distance400.xlsx'
 initPSO()
 generate(grid_min, grid_max)
 toolbox = tool(grid_min, grid_max, generate, updateParticle)
@@ -53,7 +53,6 @@ for part in pop:
                                                                                         creator, best,
                                                                                         df_bounds, grid, part_ant,
                                                                                         init=True)
-    n.append(n_data)
     part_ant, distances = distance(n_data, part, part_ant, distances, init=True)
     n_data += float(1)
     if n_data > 4.0:

@@ -72,7 +72,7 @@ def model_psogp(c1, c2, c3, c4, t, leng_scale):
     initPSO()
     generate(grid_min, grid_max)
     toolbox = tool(grid_min, grid_max, generate, updateParticle)
-    seed_list = [7]
+    seed_list = [20]
 
     array_MSE = list()
 
@@ -103,7 +103,6 @@ def model_psogp(c1, c2, c3, c4, t, leng_scale):
                                                                                         creator, best,
                                                                                         df_bounds, grid, part_ant,
                                                                                         init=True)
-        n.append(n_data)
         part_ant, distances = distance(n_data, part, part_ant, distances, init=True)
         n_data += float(1)
         if n_data > 4.0:
@@ -135,14 +134,13 @@ def model_psogp(c1, c2, c3, c4, t, leng_scale):
                                                                                             grid, part_ant,
                                                                                             init=False)
             part_ant, distances = distance(n_data, part, part_ant, distances, init=False)
-            n_data += 1.0
-            if n_data > 4.0:
+            n_data += float(1)
+            if n_data > 4:
                 n_data = float(1)
             sigma, mu, x_a, y_a = gaussian_regression(x_p, y_p, y_data, X_test, gpr)
             sigma_data, mu_data = gpr_value(x_bench, y_bench, X_test, sigma, mu, sigma_data, mu_data)
             samples += 1
         MSE_data, it = mse(g, y_data, mu_data, samples, MSE_data, it, init=False)
-        t = t
         if g >= t:
             gp_best, mu_best = sigmamax(X_test, sigma, mu)
         for part in pop:
@@ -155,7 +153,7 @@ def model_psogp(c1, c2, c3, c4, t, leng_scale):
     # mean_MSE = np.mean(array_MSE)
     x_a, y_a, x_ga, y_ga = arrays(x_p, y_p, x_g, y_g)
     savexlsx(MSE_data, sigma_data, mu_data, distances, e1, e2, e3, e4)
-    plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid, grid_min, part_ant)
+    #plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid, grid_min, part_ant)
     # plot_benchmark(xs, ys, grid, bench_function, X_test)
     # plot_error(MSE_data, it, GEN)
 

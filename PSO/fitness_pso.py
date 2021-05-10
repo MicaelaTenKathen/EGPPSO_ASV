@@ -19,15 +19,15 @@ def part_fitness(g, GEN, xs, ys, part, part_data, x_p, y_p, x_g, y_g, bench_func
             break
     y_data.append(part.fitness.values)
     if init:
-        part.best = creator.Particle(part)
-        part.best.fitness.values = part.fitness.values
         x_gap = int(part[0]) + abs(grid_min)
         y_gap = int(part[1]) + abs(grid_min)
-        n.append(n_plot)
+        #n.append(n_plot)
         x_g.append(x_gap)
         y_g.append(y_gap)
         if n_plot > 4:
             n_plot = float(1)
+        part.best = creator.Particle(part)
+        part.best.fitness.values = part.fitness.values
     else:
         if g == GEN - 1:
             x_gap = int(part[0]) + abs(grid_min)
