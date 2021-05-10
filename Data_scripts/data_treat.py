@@ -14,15 +14,7 @@ def limit(part, grid_min, grid_max):
     return part
 
 
-def arrays(x_p, y_p, x_g, y_g):
-    x_a = np.array(x_p).reshape(-1, 1)
-    y_a = np.array(y_p).reshape(-1, 1)
-    x_ga = np.array(x_g).reshape(-1, 1)
-    y_ga = np.array(y_g).reshape(-1, 1)
-    return x_a, y_a, x_ga, y_ga
-
-
-def new_limit(xs, ys, part, df_bounds, grid, part_ant, n_data):
+def new_limit(g, xs, ys, part, df_bounds, grid, part_ant, n_data, init):
     df_bounds = np.array(df_bounds)
     x_int = int(part[0])
     y_int = int(part[1])
@@ -38,23 +30,23 @@ def new_limit(xs, ys, part, df_bounds, grid, part_ant, n_data):
         for i in range(len(df_bounds)):
             if int(y_int) == df_bounds[i, 2]:
                 s += 1
-                bn.append(df_bounds[i])
+                bn.append(df_bounds[i, :])
         if s == 0:
-            if y_int < df_bounds[0, 2]:
+            if part[1] < df_bounds[0, 2]:
                 part[1] = df_bounds[0, 2]
                 for i in range(len(df_bounds)):
                     if df_bounds[i, 2] == int(part[1]):
                         s += 1
-                        bn.append(df_bounds[i])
+                        bn.append(df_bounds[i, :])
             else:
                 part[1] = df_bounds[-1, 2]
                 for i in range(len(df_bounds)):
                     if df_bounds[i, 2] == int(part[1]):
                         s += 1
-                        bn.append(df_bounds[i])
+                        bn.append(df_bounds[i, :])
         bn = np.array(bn)
         if len(bn) <= 1:
-            if x_int <= bn[0, 0]:
+            if part[0] <= bn[0, 0]:
                 part[0] = bn[0, 0]
             else:
                 part[0] = bn[0, 1]
@@ -64,28 +56,30 @@ def new_limit(xs, ys, part, df_bounds, grid, part_ant, n_data):
             elif x_int > bn[-1, 1]:
                 part[0] = bn[-1, 1]
             else:
-                if n_data == 1.0:
-                    ant = part_ant[0]
-                elif n_data == 2.0:
-                    ant = part_ant[2]
-                elif n_data == 3.0:
-                    ant = part_ant[4]
-                elif n_data == 4.0:
-                    ant = part_ant[6]
-                for i in range(len(bn)):
-                    if bn[i, 0] < ant < bn[i, 1]:
-                        if abs(ant - bn[i, 0]) > abs(ant - bn[i, 1]):
+                if init:
+                    if x_int < bn[0, 0]:
+                        part[0] = bn[0, 0]
+                    elif x_int > bn[-1, 1]:
+                        part[0] = bn[-1, 1]
+                else:
+                    if n_data == 1.0:
+                        ant = part_ant[g, 0]
+                    elif n_data == 2.0:
+                        ant = part_ant[g, 2]
+                    elif n_data == 3.0:
+                        ant = part_ant[g, 4]
+                    elif n_data == 4.0:
+                        ant = part_ant[g, 6]
+                    for i in range(len(bn)):
+                        if ant >= bn[i, 1]:
                             part[0] = bn[i, 1]
+                            break
                         else:
-                            part[0] = bn[i, 0]
-                    elif x_int < bn[i, 0]:
-                        if abs(part[0] - bn[i, 0]) > abs(part[0] - bn[i - 1, 1]):
-                            part[0] = bn[i - 1, 1]
-                        else:
-                            part[0] = bn[i, 0]
+                            part[0] = bn[i + 1, 0]
+                            break
     else:
         part = part
-    return part
+    return part, bn
 
 
 def Z_var_mean(mu, sigma, X_test, grid):
