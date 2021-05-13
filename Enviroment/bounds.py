@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from sys import path
 from Benchmark.bench import create_map
+import matplotlib as plt
 
 
 def map_bound(xs, ys, load_file=False, file=0):
@@ -98,8 +99,8 @@ def interest_area(load_file=False, file=0):
         return _z2
 
 
-# df_bounds, grid, available, no_available = map_bound(load_file=False, file=0)
-# new_grid = new_grid.replace(0, np.nan)
+# df_bounds, grid, available = map_bound(100, 150)
+# new_grid = grid.replace(0, np.nan)
 # new_grid = pd.DataFrame.to_numpy(new_grid)
 
 
@@ -107,7 +108,7 @@ def interest_area(load_file=False, file=0):
 
 # minz = np.min(_z)
 #
-# im4 = plt.imshow(_z2)  # for imshow the array must be transposed
+# im4 = plt.imshow(new_grid.T)  # for imshow the array must be transposed
 # plt.colorbar(im4, format='%.2f', shrink=1)
 # plt.xlabel("x [m]")
 # plt.ylabel("y [m]")

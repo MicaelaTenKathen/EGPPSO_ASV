@@ -3,8 +3,6 @@ import numpy as np
 
 
 def distance(g, GEN, n_data, part, part_ant, distances, init=False):
-    print(part)
-    print(n_data)
     if init:
         if n_data == 1.0:
             part_ant[0, 0] = part[0]

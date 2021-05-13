@@ -30,12 +30,12 @@ benchmark_data, n, sigma_data, mu_data, MSE_data, it = list(), list(), list(), l
 g, samples = 0, 0
 x_p, y_p, y_data, part_data = list(), list(), list(), list()
 
-c1, c2, c3, c4, GEN, t, e1, e2, e3, e4 = 2, 2, 0, 0, 10, 10, 'Pruebas/Error400.xlsx', 'Pruebas/Sigma400.xlsx', \
+c1, c2, c3, c4, GEN, t, e1, e2, e3, e4 = 2, 2, 0, 0, 1500, 10, 'Pruebas/Error400.xlsx', 'Pruebas/Sigma400.xlsx', \
                                          'Pruebas/Mu400.xlsx', 'Pruebas/Distance400.xlsx'
 initPSO()
 generate(grid_min, grid_max)
 toolbox = tool(grid_min, grid_max, generate, updateParticle)
-random.seed(26)
+random.seed(7)
 pop, best = swarm(toolbox, 4)
 stats, logbook = statistic()
 part_array = list()
