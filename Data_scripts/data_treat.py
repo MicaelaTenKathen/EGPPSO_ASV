@@ -1,5 +1,6 @@
 import numpy as np
 from Enviroment.bounds import map_bound
+from Data_scripts.ratio import ratio_s
 
 
 def limit(part, grid_min, grid_max):
@@ -14,7 +15,7 @@ def limit(part, grid_min, grid_max):
     return part
 
 
-def new_limit(g, xs, ys, part, df_bounds, grid, part_ant, n_data, init):
+def new_limit(g, xs, ys, part, df_bounds, grid, part_ant, n_data, s_ant, init):
     df_bounds = np.array(df_bounds)
     x_int = int(part[0])
     y_int = int(part[1])
@@ -46,10 +47,38 @@ def new_limit(g, xs, ys, part, df_bounds, grid, part_ant, n_data, init):
                         bn.append(df_bounds[i, :])
         bn = np.array(bn)
         if len(bn) <= 1:
-            if part[0] <= bn[0, 0]:
-                part[0] = bn[0, 0]
-            else:
-                part[0] = bn[0, 1]
+            if n_data == 1.0:
+                if s_ant[0] > 1:
+                    part = ratio_s(x_int, y_int, grid, part)
+                else:
+                    if part[0] <= bn[0, 0]:
+                        part[0] = bn[0, 0]
+                    else:
+                        part[0] = bn[0, 1]
+            elif n_data == 2.0:
+                if s_ant[1] > 1:
+                    part = ratio_s(x_int, y_int, grid, part)
+                else:
+                    if part[0] <= bn[0, 0]:
+                        part[0] = bn[0, 0]
+                    else:
+                        part[0] = bn[0, 1]
+            elif n_data == 3.0:
+                if s_ant[2] > 1:
+                    part = ratio_s(x_int, y_int, grid, part)
+                else:
+                    if part[0] <= bn[0, 0]:
+                        part[0] = bn[0, 0]
+                    else:
+                        part[0] = bn[0, 1]
+            elif n_data == 4.0:
+                if s_ant[3] > 1:
+                    part = ratio_s(x_int, y_int, grid, part)
+                else:
+                    if part[0] <= bn[0, 0]:
+                        part[0] = bn[0, 0]
+                    else:
+                        part[0] = bn[0, 1]
         else:
             if x_int < bn[0, 0]:
                 part[0] = bn[0, 0]
@@ -62,13 +91,18 @@ def new_limit(g, xs, ys, part, df_bounds, grid, part_ant, n_data, init):
                     elif x_int > bn[-1, 1]:
                         part[0] = bn[-1, 1]
                 else:
+                    part = ratio_s(x_int, y_int, grid, part)
                     if n_data == 1.0:
+                        s_ant[0] = s
                         ant = part_ant[g, 0]
                     elif n_data == 2.0:
+                        s_ant[1] = s
                         ant = part_ant[g, 2]
                     elif n_data == 3.0:
+                        s_ant[2] = s
                         ant = part_ant[g, 4]
                     elif n_data == 4.0:
+                        s_ant[3] = s
                         ant = part_ant[g, 6]
                     for i in range(len(bn)):
                         if ant >= bn[i, 1]:
@@ -78,7 +112,30 @@ def new_limit(g, xs, ys, part, df_bounds, grid, part_ant, n_data, init):
                             part[0] = bn[i + 1, 0]
                             break
     else:
-        part = part
+        s = 0
+        for i in range(len(df_bounds)):
+            if int(y_int) == df_bounds[i, 2]:
+                s += 1
+        if n_data == 1.0:
+            if s_ant[0] > 1:
+                part = ratio_s(x_int, y_int, grid, part)
+            else:
+                part = part
+        elif n_data == 2.0:
+            if s_ant[1] > 1:
+                part = ratio_s(x_int, y_int, grid, part)
+            else:
+                part = part
+        elif n_data == 3.0:
+            if s_ant[2] > 1:
+                part = ratio_s(x_int, y_int, grid, part)
+            else:
+                part = part
+        elif n_data == 4.0:
+            if s_ant[3] > 1:
+                part = ratio_s(x_int, y_int, grid, part)
+            else:
+                part = part
     return part
 
 

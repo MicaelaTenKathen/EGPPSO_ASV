@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from sys import path
 from Benchmark.bench import create_map
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 
 def map_bound(xs, ys, load_file=False, file=0):
@@ -49,12 +49,16 @@ def map_bound(xs, ys, load_file=False, file=0):
 
         if np.array(confirm).all():
             for i in range(len(first)):
-                first_x.append(first[i][0])
-                last_x.append(last[i][0])
+                first_x.append(first[i][0] + 2)
+                last_x.append(last[i][0] - 2)
                 all_y.append(first[i][1])
-                index.append(first[i][1])
+                # index.append(first[i][1])
+            first_x.pop(0), last_x.pop(0), all_y.pop(0)
+            first_x.pop(0), last_x.pop(0), all_y.pop(0)
+            first_x.pop(-1), last_x.pop(-1), all_y.pop(-1)
+            first_x.pop(-1), last_x.pop(-1), all_y.pop(-1)
             bounds = {'First X': first_x, 'Last X': last_x, 'Y': all_y}
-            df_bounds = pd.DataFrame(data=bounds, index=index)
+            df_bounds = pd.DataFrame(data=bounds)
         else:
             print('An error occurred. Map bound, y array')
 
@@ -77,38 +81,65 @@ def map_bound(xs, ys, load_file=False, file=0):
         return df_bounds, grid, available
 
 
-def interest_area(load_file=False, file=0):
+def interest_area(xs, ys, load_file=False, file=0):
     if load_file:
-        with open(path[-1] + '/Data/area.npy'.format(file), 'rb') as ar:
-            return np.load(ar)
-
+        with open(path[-1] + '/Data/secure_grid.npy'.format(file), 'rb') as sg:
+            secure_grid = np.load(sg)
+        return secure_grid
     else:
-        grid = map_bound(load_file=False)
-        _z = create_map(grid, 1, obstacles_on=False, randomize_shekel=False, sensor="", no_maxima=10,
-                        load_from_db=True, file=0)
-        for j in range(len(grid[1])):
-            for i in range(len(grid)):
-                if grid[i, j] == 0:
-                    _z[i, j] = np.nan
-        _z2 = np.transpose(_z)
+        with open(path[-1] + '/Data/bounds.npy'.format(file), 'rb') as bn:
+            df_bounds = np.load(bn)
+        secure_grid = np.zeros((xs, ys))
+        for i in range(len(df_bounds)):
+            secure_grid[df_bounds[i, 0], df_bounds[i, 2]] = 1
+            secure_grid[df_bounds[i, 1], df_bounds[i, 2]] = 1
+
+        for j in range(len(secure_grid[1])):
+            con = False
+            uno = 0
+            for i in range(len(secure_grid)):
+                if secure_grid[i, j] == 1:
+                    con = True
+                    uno += 1
+                if con and uno == 1:
+                    secure_grid[i, j] = 1
 
         with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
-                  'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/area.npy', 'wb') as ar:
-            np.save(ar, _z2)
+                  'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/secure_grid.npy', 'wb') as sg:
+            np.save(sg, secure_grid)
 
-        return _z2
+        return secure_grid
+    # else:
+    #     grid = map_bound(load_file=False)
+    #     _z = create_map(grid, 1, obstacles_on=False, randomize_shekel=False, sensor="", no_maxima=10,
+    #                     load_from_db=True, file=0)
+    #     for j in range(len(grid[1])):
+    #         for i in range(len(grid)):
+    #             if grid[i, j] == 0:
+    #                 _z[i, j] = np.nan
+    #     _z2 = np.transpose(_z)
+    #
+    #     with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
+    #               'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/area.npy', 'wb') as ar:
+    #         np.save(ar, _z2)
+    #
+    #     return _z2
 
 
 # df_bounds, grid, available = map_bound(100, 150)
-# new_grid = grid.replace(0, np.nan)
+# grid[grid == 0] = np.nan
 # new_grid = pd.DataFrame.to_numpy(new_grid)
+# secure = interest_area(100, 150, load_file=False, file=0)
+# secure[secure == 0] = np.nan
 
 
 #
 
 # minz = np.min(_z)
 #
-# im4 = plt.imshow(new_grid.T)  # for imshow the array must be transposed
+# im4 = plt.imshow(grid.T)  # for imshow the array must be transposed
+# im5 = plt.imshow(secure.T)  # for imshow the array must be transposed
+
 # plt.colorbar(im4, format='%.2f', shrink=1)
 # plt.xlabel("x [m]")
 # plt.ylabel("y [m]")
@@ -118,3 +149,4 @@ def interest_area(load_file=False, file=0):
 # plt.grid(True)
 # # plt.savefig("map.PNG")
 # plt.show()
+# im5.show()

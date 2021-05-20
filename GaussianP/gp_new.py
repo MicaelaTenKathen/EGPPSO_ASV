@@ -47,17 +47,20 @@ def data(x_p, y_p, y_data):
     return x_a, y_a, x_train, y_train
 
 
-def gaussian_regression(x_p, y_p, y_data, X_test, gpr):
+def gaussian_regression(n_data, x_p, y_p, y_data, X_test, gpr, post_array):
+
     x_a, y_a, x_train, y_train = data(x_p, y_p, y_data)
     gpr.fit(x_train, y_train)
     gpr.get_params()
 
     mu, sigma = gpr.predict(X_test, return_std=True)
+    post_ls = np.min(np.exp(gpr.kernel_.theta[0]))
+    post_array[n_data - 1] = post_ls
 
     # Z_var = sigma.reshape(x, y)
     # Z_mean = mu.reshape(x, y)
 
-    return sigma, mu, x_a, y_a
+    return sigma, mu, x_a, y_a, post_array
 
 
 def gpr_value(g, x_bench, y_bench, X_test, sigma, mu, sigma_data, mu_data):

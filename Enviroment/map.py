@@ -1,5 +1,6 @@
 from PIL import Image
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def black_white(resolution, xs, ys):
@@ -33,7 +34,27 @@ def black_white(resolution, xs, ys):
     return array, resolution
 
 
-# array = black_white(1, 100, 150)
+# grid, res = black_white(1, 100, 150)
+# grid[grid == 0] = np.nan
+# img.show()
+# img.save("Ypacarai_lake.png")
+# new_grid = pd.DataFrame.to_numpy(new_grid)
+
+
+#
+
+# minz = np.min(_z)
+#
+# im4 = plt.imshow(grid.T)  # for imshow the array must be transposed
+# plt.colorbar(im4, format='%.2f', shrink=1)
+# plt.xlabel("x [m]")
+# plt.ylabel("y [m]")
+# plt.ylim([0, 1500])
+# # Axs[1].set_aspect('equal')
+# # plt.title('Ground Truth')
+# plt.grid(True)
+# # plt.savefig("map.PNG")
+plt.show()
 
 def map_values(xs, ys):
     grid_max_x = xs

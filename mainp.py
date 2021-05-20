@@ -48,7 +48,7 @@ variant_names = \
         9: "best/2/bin",
         10: "rand/2/bin"
     }
-
+number = 0
 
 @use_named_args(dimensions=dimensions)
 def model_psogp(c1, c2, c3, c4, t, leng_scale):
@@ -58,10 +58,14 @@ def model_psogp(c1, c2, c3, c4, t, leng_scale):
     c41 = int(c4)
     t = int(t)
     leng_scale = float(leng_scale)
-    global model_psogp, sigma, mu, n_plot, n_data
+    global model_psogp, sigma, mu, n_plot, n_data, number
     xs, ys = 100, 150
 
-    bench_function, X_test, grid, df_bounds = available_bench(xs, ys, load_file=False, load_from_db=False)
+    if number == 0:
+        bench_function, X_test, grid, df_bounds = available_bench(xs, ys, load_file=False, load_from_db=False)
+        number += 1
+    else:
+        bench_function, X_test, grid, df_bounds = available_bench(xs, ys, load_file=True, load_from_db=True)
 
     grid_min, grid_max, grid_max_x, grid_max_y = map_values(xs, ys)
 
@@ -83,10 +87,13 @@ def model_psogp(c1, c2, c3, c4, t, leng_scale):
     stats, logbook = statistic()
 
     gp_best, mu_best = [0, 0], [0, 0]
-    part_dist, part_ant, distances, n_data, n_plot = np.zeros(8), np.zeros(8), np.zeros(4), float(1), float(1)
+    part_dist, part_ant, distances, n_data, n_plot = np.zeros(8), np.zeros((GEN + 1, 8)), np.zeros(4), float(1), float(1)
     benchmark_data, n, sigma_data, mu_data, MSE_data, it = list(), list(), list(), list(), list(), list()
     g, samples = 0, 0
-    x_p, y_p, x_g, y_g, y_data, part_data, x_train, y_train = list(), list(), list(), list(), list(), list(), list(), list()
+    x_p, y_p, y_data, part_data, x_g, y_g, = list(), list(), list(), list(), list(), list()
+
+    s_ant = np.zeros(4)
+    s_n = np.array([True, True, True, True])
 
     ker = RBF(length_scale=leng_scale)
 
@@ -94,16 +101,16 @@ def model_psogp(c1, c2, c3, c4, t, leng_scale):
 
     for part in pop:
         c1, c2, c3, c4 = 2, 2, 0, 0
-        x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, GEN, xs, ys, part, part_data, x_p,
-                                                                                        y_p,
-                                                                                        x_g, y_g,
-                                                                                        bench_function, y_data, n,
-                                                                                        n_plot,
-                                                                                        n_data, grid_min, X_test,
-                                                                                        creator, best,
-                                                                                        df_bounds, grid, part_ant,
-                                                                                        init=True)
-        part_ant, distances = distance(n_data, part, part_ant, distances, init=True)
+        x_p, y_p, y_data, x_bench, y_bench, part, best, n_plot, s_n = part_fitness(g, GEN, xs, ys, part, s_ant, s_n,
+                                                                                   x_p,
+                                                                                   y_p, bench_function, y_data, n,
+                                                                                   n_plot,
+                                                                                   n_data, grid_min, X_test,
+                                                                                   creator, best,
+                                                                                   df_bounds, part_ant, x_g, y_g,
+                                                                                   file=False,
+                                                                                   init=True)
+        part_ant, distances = distance(g, GEN, n_data, part, part_ant, distances, init=True)
         n_data += float(1)
         if n_data > 4.0:
             n_data = float(1)
@@ -122,18 +129,16 @@ def model_psogp(c1, c2, c3, c4, t, leng_scale):
         else:
             c1, c2, c3, c4 = c11, c21, c31, c41
         for part in pop:
-            x_p, y_p, x_g, y_g, y_data, x_bench, y_bench, part, best, n_plot = part_fitness(g, GEN, xs, ys, part, part_data, x_p,
-                                                                                            y_p, x_g, y_g,
-                                                                                            bench_function, y_data,
-                                                                                            n,
-                                                                                            n_plot, n_data,
-                                                                                            grid_min,
-                                                                                            X_test,
-                                                                                            creator, best,
-                                                                                            df_bounds,
-                                                                                            grid, part_ant,
-                                                                                            init=False)
-            part_ant, distances = distance(n_data, part, part_ant, distances, init=False)
+            x_p, y_p, y_data, x_bench, y_bench, part, best, n_plot, s_n = part_fitness(g, GEN, xs, ys, part, s_ant, s_n,
+                                                                                       x_p,
+                                                                                       y_p, bench_function, y_data, n,
+                                                                                       n_plot,
+                                                                                       n_data, grid_min, X_test,
+                                                                                       creator, best,
+                                                                                       df_bounds, part_ant, x_g, y_g,
+                                                                                       file=False,
+                                                                                       init=True)
+            part_ant, distances = distance(g, GEN, n_data, part, part_ant, distances, init=True)
             n_data += float(1)
             if n_data > 4:
                 n_data = float(1)
@@ -151,9 +156,8 @@ def model_psogp(c1, c2, c3, c4, t, leng_scale):
     MSE = MSE_data[-1]
     # array_MSE = np.array(array_MSE)
     # mean_MSE = np.mean(array_MSE)
-    x_a, y_a, x_ga, y_ga = arrays(x_p, y_p, x_g, y_g)
     savexlsx(MSE_data, sigma_data, mu_data, distances, e1, e2, e3, e4)
-    #plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid, grid_min, part_ant)
+    # plot_gaussian(ys, x_g, y_g, n, mu, sigma, X_test, grid, grid_min, part_ant)
     # plot_benchmark(xs, ys, grid, bench_function, X_test)
     # plot_error(MSE_data, it, GEN)
 
