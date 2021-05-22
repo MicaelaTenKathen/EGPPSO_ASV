@@ -16,7 +16,7 @@ def limit(part, grid_min, grid_max):
 
 
 def new_limit(g, xs, ys, part, df_bounds, part_ant, n_data, s_ant, s_n, file):
-    secure = interest_area(xs, ys, file)
+    secure, av = interest_area(xs, ys, file)
     df_bounds = np.array(df_bounds)
     x_int = int(part[0])
     y_int = int(part[1])

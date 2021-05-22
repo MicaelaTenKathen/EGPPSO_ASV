@@ -49,8 +49,8 @@ def map_bound(xs, ys, load_file=False, file=0):
 
         if np.array(confirm).all():
             for i in range(len(first)):
-                first_x.append(first[i][0] + 2)
-                last_x.append(last[i][0] - 2)
+                first_x.append(first[i][0] + 3)
+                last_x.append(last[i][0] - 3)
                 all_y.append(first[i][1])
                 # index.append(first[i][1])
             first_x.pop(0), last_x.pop(0), all_y.pop(0)
@@ -85,7 +85,10 @@ def interest_area(xs, ys, load_file=False, file=0):
     if load_file:
         with open(path[-1] + '/Data/secure_grid.npy'.format(file), 'rb') as sg:
             secure_grid = np.load(sg)
-        return secure_grid
+
+        with open(path[-1] + '/Data/secure_av.npy'.format(file), 'rb') as sa:
+            se_available = np.load(sa)
+        return secure_grid, se_available
     else:
         with open(path[-1] + '/Data/bounds.npy'.format(file), 'rb') as bn:
             df_bounds = np.load(bn)
@@ -93,7 +96,9 @@ def interest_area(xs, ys, load_file=False, file=0):
         for i in range(len(df_bounds)):
             secure_grid[df_bounds[i, 0], df_bounds[i, 2]] = 1
             secure_grid[df_bounds[i, 1], df_bounds[i, 2]] = 1
-
+        se_first = list()
+        se_last = list()
+        se_available = list()
         for j in range(len(secure_grid[1])):
             con = False
             uno = 0
@@ -104,11 +109,29 @@ def interest_area(xs, ys, load_file=False, file=0):
                 if con and uno == 1:
                     secure_grid[i, j] = 1
 
+        bound = True
+        for j in range(len(secure_grid[1])):
+            for i in range(len(secure_grid)):
+                if secure_grid[i, j] == 1:
+                    if bound:
+                        se_first.append([i, j])
+                        bound = False
+                    se_available.append([i, j])
+                    grid_ant = [i, j]
+                else:
+                    if not bound:
+                        se_last.append(grid_ant)
+                        bound = True
+
         with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
                   'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/secure_grid.npy', 'wb') as sg:
             np.save(sg, secure_grid)
 
-        return secure_grid
+        with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
+                  'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/secure_av.npy', 'wb') as sa:
+            np.save(sa, se_available)
+
+        return secure_grid, se_available
     # else:
     #     grid = map_bound(load_file=False)
     #     _z = create_map(grid, 1, obstacles_on=False, randomize_shekel=False, sensor="", no_maxima=10,
@@ -129,8 +152,8 @@ def interest_area(xs, ys, load_file=False, file=0):
 # df_bounds, grid, available = map_bound(100, 150)
 # grid[grid == 0] = np.nan
 # new_grid = pd.DataFrame.to_numpy(new_grid)
-# secure = interest_area(100, 150, load_file=False, file=0)
-# secure[secure == 0] = np.nan
+#secure = interest_area(100, 150, load_file=False, file=0)
+#secure[secure == 0] = np.nan
 
 
 #
@@ -138,7 +161,7 @@ def interest_area(xs, ys, load_file=False, file=0):
 # minz = np.min(_z)
 #
 # im4 = plt.imshow(grid.T)  # for imshow the array must be transposed
-# im5 = plt.imshow(secure.T)  # for imshow the array must be transposed
+#im5 = plt.imshow(secure.T)  # for imshow the array must be transposed
 
 # plt.colorbar(im4, format='%.2f', shrink=1)
 # plt.xlabel("x [m]")
@@ -148,5 +171,5 @@ def interest_area(xs, ys, load_file=False, file=0):
 # # plt.title('Ground Truth')
 # plt.grid(True)
 # # plt.savefig("map.PNG")
-# plt.show()
+#plt.show()
 # im5.show()

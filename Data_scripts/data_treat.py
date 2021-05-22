@@ -80,62 +80,65 @@ def new_limit(g, xs, ys, part, df_bounds, grid, part_ant, n_data, s_ant, init):
                     else:
                         part[0] = bn[0, 1]
         else:
-            if x_int < bn[0, 0]:
-                part[0] = bn[0, 0]
-            elif x_int > bn[-1, 1]:
-                part[0] = bn[-1, 1]
-            else:
-                if init:
-                    if x_int < bn[0, 0]:
-                        part[0] = bn[0, 0]
-                    elif x_int > bn[-1, 1]:
-                        part[0] = bn[-1, 1]
-                else:
-                    part = ratio_s(x_int, y_int, grid, part)
-                    if n_data == 1.0:
-                        s_ant[0] = s
-                        ant = part_ant[g, 0]
-                    elif n_data == 2.0:
-                        s_ant[1] = s
-                        ant = part_ant[g, 2]
-                    elif n_data == 3.0:
-                        s_ant[2] = s
-                        ant = part_ant[g, 4]
-                    elif n_data == 4.0:
-                        s_ant[3] = s
-                        ant = part_ant[g, 6]
-                    for i in range(len(bn)):
-                        if ant >= bn[i, 1]:
-                            part[0] = bn[i, 1]
-                            break
-                        else:
-                            part[0] = bn[i + 1, 0]
-                            break
+            part[1] = part[1] - 2
+
     else:
         s = 0
-        for i in range(len(df_bounds)):
-            if int(y_int) == df_bounds[i, 2]:
-                s += 1
-        if n_data == 1.0:
-            if s_ant[0] > 1:
-                part = ratio_s(x_int, y_int, grid, part)
+        gn = list()
+        if 55 <= part[0] <= 58 and 36 <= part[1] <= 40:
+            part[1] = 34
+        else:
+            for i in range(len(df_bounds)):
+                if int(y_int) == df_bounds[i, 2]:
+                    s += 1
+                    gn.append(df_bounds[i, :])
+            if s <= 1:
+                if n_data == 1.0:
+                    if s_ant[0] > 1:
+                        part = ratio_s(x_int, y_int, grid, part)
+                    else:
+                        if part[0] < gn[0, 0]:
+                            part[0] = gn[0, 0]
+                        elif part[0] > gn[0, 1]:
+                            part[0] = gn[0, 1]
+                        else:
+                            part = part
+                elif n_data == 2.0:
+                    if s_ant[1] > 1:
+                        part = ratio_s(x_int, y_int, grid, part)
+                    else:
+                        if part[0] < gn[0, 0]:
+                            part[0] = gn[0, 0]
+                        elif part[0] > gn[0, 1]:
+                            part[0] = gn[0, 1]
+                        else:
+                            part = part
+                elif n_data == 3.0:
+                    if s_ant[2] > 1:
+                        part = ratio_s(x_int, y_int, grid, part)
+                    else:
+                        if part[0] < gn[0, 0]:
+                            part[0] = gn[0, 0]
+                        elif part[0] > gn[0, 1]:
+                            part[0] = gn[0, 1]
+                        else:
+                            part = part
+                elif n_data == 4.0:
+                    if s_ant[3] > 1:
+                        part = ratio_s(x_int, y_int, grid, part)
+                    else:
+                        if part[0] < gn[0, 0]:
+                            part[0] = gn[0, 0]
+                        elif part[0] > gn[0, 1]:
+                            part[0] = gn[0, 1]
+                        else:
+                            part = part
             else:
-                part = part
-        elif n_data == 2.0:
-            if s_ant[1] > 1:
-                part = ratio_s(x_int, y_int, grid, part)
-            else:
-                part = part
-        elif n_data == 3.0:
-            if s_ant[2] > 1:
-                part = ratio_s(x_int, y_int, grid, part)
-            else:
-                part = part
-        elif n_data == 4.0:
-            if s_ant[3] > 1:
-                part = ratio_s(x_int, y_int, grid, part)
-            else:
-                part = part
+                part[1] = part[1] - 2
+    if 36 <= x_int <= 40:
+        if 54 <= y_int <= 59:
+            part[0] = float(30)
+            part[1] = float(50)
     return part
 
 
