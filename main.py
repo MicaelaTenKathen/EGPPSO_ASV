@@ -1,6 +1,6 @@
 from PSO.initialize_PSO import *
 
-from Benchmark.bohachevsky import *
+from Benchmark.function import *
 
 from Enviroment.map import *
 from Enviroment.plots import *

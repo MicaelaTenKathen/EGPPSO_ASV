@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 from Data_scripts.data_treat import Z_var_mean
 import numpy as np
 from GaussianP.gp_new import gp_regression
-from Benchmark.bohachevsky import available_bench_graf
 from Benchmark.bench import create_map
 
 def plot_evolucion(log):
@@ -44,11 +43,8 @@ def bench_plot(xs, ys, bench_function, X_test, grid):
     return plot, benchma_plot
 
 
-def plot_gaussian(xs, ys, x_ga, y_ga, n, n_data, x_h, y_h, fitness, gpr, post_array, grid_min, part_ant):
-    bench_function, X_test, grid, df_bounds = available_bench_graf(xs, ys, load_file=False, load_from_db=False)
+def plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid, grid_min, part_ant):
 
-    sigma, mu, x_a, y_a, post_array = gp_regression(n_data, x_h, y_h, fitness, X_test, gpr,
-                                                          post_array)
     Z_var, Z_mean = Z_var_mean(mu, sigma, X_test, grid)
 
     fig, axs = plt.subplots(1, 2, figsize=(10, 5))
@@ -88,7 +84,7 @@ def plot_gaussian(xs, ys, x_ga, y_ga, n, n_data, x_h, y_h, fitness, gpr, post_ar
 
 
 def plot_benchmark(xs, ys, grid, bench_function, X_test):
-    bench_function, X_test, grid, df_bounds = available_bench_graf(xs, ys, load_file=True, load_from_db=True)
+
     plot, benchmark_plot = bench_plot(xs, ys, bench_function, X_test, grid)
     plt.figure(2)
     im4 = plt.imshow(benchmark_plot, interpolation='bilinear', origin='lower', cmap="jet")

@@ -8,7 +8,7 @@ from GaussianP.gp import *
 
 from sklearn.gaussian_process import GaussianProcessRegressor
 
-from Benchmark.bohachevsky import *
+from Benchmark.function import *
 
 from Data_scripts.distance import *
 from Data_scripts.error import *

@@ -7,7 +7,7 @@ from GaussianP.max_values import *
 
 from sklearn.gaussian_process import GaussianProcessRegressor
 
-from Benchmark.bohachevsky import *
+from Benchmark.function import *
 
 from Data_scripts.distance_new import *
 from Data_scripts.error_new import *
@@ -20,13 +20,13 @@ import time
 
 xs, ys = 100, 150
 
-bench_function, X_test, grid, df_bounds = available_bench(xs, ys, load_file=False, load_from_db=False)
+bench_function, X_test, grid, df_bounds, grid_or = bench_total(xs, ys, load_file=False, load_from_db=True)
 
 grid_min, grid_max, grid_max_x, grid_max_y = map_values(xs, ys)
 
 gp_best, mu_best = [0, 0], [0, 0]
 
-c1, c2, c3, c4 = 0, 2, 4, 1
+c1, c2, c3, c4 = 0, 4, 0, 4
 
 e1, e2, e3, e4, e5 = 'Pruebas/Error1.xlsx', 'Pruebas/Sigma1.xlsx', \
                      'Pruebas/Mu1.xlsx', 'Pruebas/Distance1.xlsx', 'Pruebas/Data1.xlsx'
@@ -51,7 +51,7 @@ part_array = list()
 s_ant = np.zeros(4)
 s_n = np.array([True, True, True, True])
 
-length_scale = 0.6878
+length_scale = 0.4758
 ker = RBF(length_scale=length_scale, length_scale_bounds=(1e-1, 10))
 post_array = [length_scale, length_scale, length_scale, length_scale]
 
@@ -163,6 +163,6 @@ data = {'Seed': seed, 'GEN': GEN, 'Time': time.time() - start_time, 'MSE_GEN': M
 data_array = [seed, GEN, time.time() - start_time, MSE_data[-1], np.mean(distances)]
 
 savexlsx(MSE_data, sigma_data, mu_data, distances, data_array, e1, e2, e3, e4, e5)
-plot_gaussian(xs, ys, x_g, y_g, n, n_data, x_h, y_h, fitness, gpr, post_array, grid_min, part_ant)
-plot = plot_benchmark(xs, ys, grid, bench_function, X_test)
+plot_gaussian(ys, x_g, y_g, n, mu, sigma, X_test, grid_or, grid_min, part_ant)
+plot = plot_benchmark(xs, ys, grid_or, bench_function, X_test)
 plot_error(MSE_data, it, GEN)

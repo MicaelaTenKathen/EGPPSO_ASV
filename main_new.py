@@ -7,7 +7,7 @@ from GaussianP.max_values import *
 
 from sklearn.gaussian_process import GaussianProcessRegressor
 
-from Benchmark.bohachevsky import *
+from Benchmark.function import *
 
 from Data_scripts.distance_new import *
 from Data_scripts.error_new import *

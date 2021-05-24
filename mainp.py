@@ -7,7 +7,7 @@ from GaussianP.max_values import *
 
 from sklearn.gaussian_process import GaussianProcessRegressor
 
-from Benchmark.bohachevsky import *
+from Benchmark.function import *
 
 from Data_scripts.distance_new import *
 from Data_scripts.error_new import *
@@ -63,11 +63,8 @@ def model_psogp(c1, c2, c3, c4, leng_scale, lam):
     global model_psogp, sigma, mu, n_plot, n_data, number
     xs, ys = 100, 150
 
-    if number == 0:
-        bench_function, X_test, grid, df_bounds = available_bench(xs, ys, load_file=False, load_from_db=False)
-        number += 1
-    else:
-        bench_function, X_test, grid, df_bounds = available_bench(xs, ys, load_file=True, load_from_db=True)
+    bench_function, X_test, grid, df_bounds, grid_or = bench_total(xs, ys, load_file=False, load_from_db=True)
+
 
     grid_min, grid_max, grid_max_x, grid_max_y = map_values(xs, ys)
 
@@ -81,7 +78,7 @@ def model_psogp(c1, c2, c3, c4, leng_scale, lam):
     seed_list = [20]
 
     array_MSE = list()
-    seed = [2, 541, 65, 145, 541, 156, 158, 12, 3, 89] # 57, 123, 456, 789, 987, 654, 321, 147, 258, 369, 741, 852, 963, 159, 951, 753, 357, 756, 8462, 4875]
+    seed = [2] #, 541, 65, 145, 541, 156, 158, 12, 3, 89] # 57, 123, 456, 789, 987, 654, 321, 147, 258, 369, 741, 852, 963, 159, 951, 753, 357, 756, 8462, 4875]
     for i in range(len(seed)):
 
         random.seed(seed[i])
@@ -259,7 +256,7 @@ def model_psogp(c1, c2, c3, c4, leng_scale, lam):
 
 search_result = gp_minimize(func=model_psogp,
                             dimensions=dimensions,
-                            n_calls=20,
+                            n_calls=30,
                             acq_func='EI',
                             x0=default_parameters)
 

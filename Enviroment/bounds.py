@@ -40,9 +40,9 @@ def map_bound(xs, ys, load_file=False, file=0):
                         if f:
                             if j > u:
                                 if y_first[-1] == y_last[-1]:
-                                    first[-5] = first[-2]
-                                    first.insert(-4, first[-1])
-                                    y_first.insert(-4, y_first[-5])
+                                    #first[-5] = first[-2]
+                                    #first.insert(-4, first[-1])
+                                    #y_first.insert(-4, y_first[-5])
                                     first[-4] = first[-2]
                                     first.insert(-3, first[-1])
                                     y_first.insert(-3, y_first[-4])
@@ -61,8 +61,8 @@ def map_bound(xs, ys, load_file=False, file=0):
                         y_last.append(grid_y)
                         bound = True
                         if o:
-                            last[-5] = last[-2]
-                            last.insert(-4, last[-1])
+                            #last[-5] = last[-2]
+                            #last.insert(-4, last[-1])
                             last[-4] = last[-2]
                             last.insert(-3, last[-1])
                             last[-3] = last[-2]
@@ -76,8 +76,8 @@ def map_bound(xs, ys, load_file=False, file=0):
 
         if np.array(confirm).all():
             for i in range(len(first)):
-                first_x.append(first[i] + 2)
-                last_x.append(last[i] - 2)
+                first_x.append(first[i] + 1)
+                last_x.append(last[i] - 1)
                 all_y.append(y_first[i])
                 # index.append(first[i][1])
             first_x.pop(0), last_x.pop(0), all_y.pop(0)
