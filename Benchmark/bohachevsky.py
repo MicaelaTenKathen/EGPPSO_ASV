@@ -16,7 +16,7 @@ from Enviroment.bounds import *
 #     return bench_max, benchmark_plot
 
 
-def available_bench(xs, ys, load_file=True, load_from_db=True):
+def available_bench_graf(xs, ys, load_file=False, load_from_db=False):
     bench = list()
     df_bounds, grid, X_test = map_bound(xs, ys, load_file=load_file)
     _z = create_map(grid, 1, obstacles_on=False, randomize_shekel=False, sensor="", no_maxima=10,
@@ -25,4 +25,22 @@ def available_bench(xs, ys, load_file=True, load_from_db=True):
         bench.append(_z[X_test[i][0], X_test[i][+1]])
 
     bench_function = np.array(bench)
+    meanz = np.nanmean(bench_function)
+    stdz = np.nanstd(bench_function)
+    bench_function = (bench_function - meanz) / stdz
+    return bench_function, X_test, grid, df_bounds
+
+
+def available_bench(xs, ys, load_file=True, load_from_db=False):
+    bench = list()
+    grid, X_test, df_bounds = interest_area(xs, ys, load_file=False, file=0)
+    _z = create_map(grid, 1, obstacles_on=False, randomize_shekel=False, sensor="", no_maxima=10,
+                    load_from_db=load_from_db, file=0)
+    for i in range(len(X_test)):
+        bench.append(_z[X_test[i][0], X_test[i][+1]])
+
+    bench_function = np.array(bench)
+    meanz = np.nanmean(bench_function)
+    stdz = np.nanstd(bench_function)
+    bench_function = (bench_function - meanz) / stdz
     return bench_function, X_test, grid, df_bounds

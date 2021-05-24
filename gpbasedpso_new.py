@@ -26,7 +26,7 @@ grid_min, grid_max, grid_max_x, grid_max_y = map_values(xs, ys)
 
 gp_best, mu_best = [0, 0], [0, 0]
 
-c1, c2, c3, c4 = 0, 0, 4, 4
+c1, c2, c3, c4 = 0, 2, 4, 1
 
 e1, e2, e3, e4, e5 = 'Pruebas/Error1.xlsx', 'Pruebas/Sigma1.xlsx', \
                      'Pruebas/Mu1.xlsx', 'Pruebas/Distance1.xlsx', 'Pruebas/Data1.xlsx'
@@ -51,7 +51,7 @@ part_array = list()
 s_ant = np.zeros(4)
 s_n = np.array([True, True, True, True])
 
-length_scale = 1.0
+length_scale = 0.6878
 ker = RBF(length_scale=length_scale, length_scale_bounds=(1e-1, 10))
 post_array = [length_scale, length_scale, length_scale, length_scale]
 
@@ -61,7 +61,7 @@ start_time = time.time()
 
 for part in pop:
     print(part)
-    ok, x_h, y_h, fitness, x_p, y_p, y_data, x_bench, y_bench, part, best, n_plot, s_n = part_fitness(ok, x_h, y_h, fitness, g, GEN, xs, ys, part, s_ant, s_n, x_p,
+    ok, x_h, y_h, fitness, x_p, y_p, y_data, x_bench, y_bench, part, best, n_plot, s_n = part_fitness(grid, ok, x_h, y_h, fitness, g, GEN, xs, ys, part, s_ant, s_n, x_p,
                                                                                y_p,
                                                                                bench_function, y_data, n,
                                                                                n_plot,
@@ -96,7 +96,7 @@ for g in range(GEN):
     # print(ok)
     for part in pop:
 
-        ok, x_h, y_h, fitness, x_p, y_p, y_data, x_bench, y_bench, part, best, n_plot, s_n = part_fitness(ok, x_h, y_h, fitness, g, GEN, xs, ys, part, s_ant, s_n,
+        ok, x_h, y_h, fitness, x_p, y_p, y_data, x_bench, y_bench, part, best, n_plot, s_n = part_fitness(grid, ok, x_h, y_h, fitness, g, GEN, xs, ys, part, s_ant, s_n,
                                                                                    x_p,
                                                                                    y_p,
                                                                                    bench_function, y_data, n,
@@ -117,7 +117,7 @@ for g in range(GEN):
         print('in')
         last_sample = np.mean(distances)
         for part in pop:
-            ok, x_h, y_h, fitness, x_p, y_p, y_data, x_bench, y_bench, part, best, n_plot, s_n = part_fitness(ok, x_h, y_h,
+            ok, x_h, y_h, fitness, x_p, y_p, y_data, x_bench, y_bench, part, best, n_plot, s_n = part_fitness(grid, ok, x_h, y_h,
                                                                                                           fitness, g,
                                                                                                           GEN, xs, ys,
                                                                                                           part, s_ant,
@@ -137,8 +137,7 @@ for g in range(GEN):
                                                                                                           file=True,
                                                                                                           init=False)
 
-            sigma, mu, x_a, y_a, post_array = gaussian_regression(n_data, x_h, y_h, fitness, X_test, gpr,
-                                                               post_array)
+            sigma, mu, x_a, y_a, post_array = gp_regression(n_data, x_h, y_h, fitness, X_test, gpr, post_array)
             sigma_data, mu_data = gpr_value(g, int(part[0]), int(part[1]), X_test, sigma, mu, sigma_data, mu_data)
             samples += 1
 
@@ -164,6 +163,6 @@ data = {'Seed': seed, 'GEN': GEN, 'Time': time.time() - start_time, 'MSE_GEN': M
 data_array = [seed, GEN, time.time() - start_time, MSE_data[-1], np.mean(distances)]
 
 savexlsx(MSE_data, sigma_data, mu_data, distances, data_array, e1, e2, e3, e4, e5)
-plot_gaussian(ys, x_g, y_g, n, mu, sigma, X_test, grid, grid_min, part_ant)
+plot_gaussian(xs, ys, x_g, y_g, n, n_data, x_h, y_h, fitness, gpr, post_array, grid_min, part_ant)
 plot = plot_benchmark(xs, ys, grid, bench_function, X_test)
 plot_error(MSE_data, it, GEN)

@@ -81,10 +81,10 @@ def model_psogp(c1, c2, c3, c4, leng_scale, lam):
     seed_list = [20]
 
     array_MSE = list()
-    seed = [2, 541, 65, 145, 541, 156, 158, 12, 3, 89, 57, 123, 456, 789, 987, 654, 321, 147, 258, 369, 741, 852, 963, 159, 951, 753, 357, 756, 8462, 4875]
-    for i in range(len(seed_list)):
+    seed = [2, 541, 65, 145, 541, 156, 158, 12, 3, 89] # 57, 123, 456, 789, 987, 654, 321, 147, 258, 369, 741, 852, 963, 159, 951, 753, 357, 756, 8462, 4875]
+    for i in range(len(seed)):
 
-        random.seed(seed_list[0])
+        random.seed(seed[i])
         pop, best = swarm(toolbox, 4)
         stats, logbook = statistic()
 
@@ -109,10 +109,13 @@ def model_psogp(c1, c2, c3, c4, leng_scale, lam):
 
         for part in pop:
             print(part)
-            ok, x_h, y_h, fitness, x_p, y_p, y_data, x_bench, y_bench, part, best, n_plot, s_n = part_fitness(ok, x_h, y_h,
-                                                                                                              fitness, g,
-                                                                                                              GEN, xs, ys,
-                                                                                                              part, s_ant,
+            ok, x_h, y_h, fitness, x_p, y_p, y_data, x_bench, y_bench, part, best, n_plot, s_n = part_fitness(grid, ok,
+                                                                                                              x_h, y_h,
+                                                                                                              fitness,
+                                                                                                              g, GEN,
+                                                                                                              xs, ys,
+                                                                                                              part,
+                                                                                                              s_ant,
                                                                                                               s_n, x_p,
                                                                                                               y_p,
                                                                                                               bench_function,
@@ -121,10 +124,11 @@ def model_psogp(c1, c2, c3, c4, leng_scale, lam):
                                                                                                               n_data,
                                                                                                               grid_min,
                                                                                                               X_test,
-                                                                                                              creator, best,
+                                                                                                              creator,
+                                                                                                              best,
                                                                                                               df_bounds,
-                                                                                                              part_ant, x_g,
-                                                                                                              y_g,
+                                                                                                              part_ant,
+                                                                                                              x_g, y_g,
                                                                                                               file=False,
                                                                                                               init=True)
 
@@ -154,18 +158,23 @@ def model_psogp(c1, c2, c3, c4, leng_scale, lam):
             # print(ok)
             for part in pop:
 
-                ok, x_h, y_h, fitness, x_p, y_p, y_data, x_bench, y_bench, part, best, n_plot, s_n = part_fitness(ok, x_h,
+                ok, x_h, y_h, fitness, x_p, y_p, y_data, x_bench, y_bench, part, best, n_plot, s_n = part_fitness(grid,
+                                                                                                                  ok,
+                                                                                                                  x_h,
                                                                                                                   y_h,
                                                                                                                   fitness,
-                                                                                                                  g, GEN,
-                                                                                                                  xs, ys,
+                                                                                                                  g,
+                                                                                                                  GEN,
+                                                                                                                  xs,
+                                                                                                                  ys,
                                                                                                                   part,
                                                                                                                   s_ant,
                                                                                                                   s_n,
                                                                                                                   x_p,
                                                                                                                   y_p,
                                                                                                                   bench_function,
-                                                                                                                  y_data, n,
+                                                                                                                  y_data,
+                                                                                                                  n,
                                                                                                                   n_plot,
                                                                                                                   n_data,
                                                                                                                   grid_min,
@@ -174,7 +183,8 @@ def model_psogp(c1, c2, c3, c4, leng_scale, lam):
                                                                                                                   best,
                                                                                                                   df_bounds,
                                                                                                                   part_ant,
-                                                                                                                  x_g, y_g,
+                                                                                                                  x_g,
+                                                                                                                  y_g,
                                                                                                                   file=True,
                                                                                                                   init=False)
                 part_ant, distances = distance(g, GEN, n_data, part, part_ant, distances, init=False)
@@ -188,38 +198,30 @@ def model_psogp(c1, c2, c3, c4, leng_scale, lam):
                 print('in')
                 last_sample = np.mean(distances)
                 for part in pop:
-                    ok, x_h, y_h, fitness, x_p, y_p, y_data, x_bench, y_bench, part, best, n_plot, s_n = part_fitness(ok,
-                                                                                                                      x_h,
-                                                                                                                      y_h,
-                                                                                                                      fitness,
-                                                                                                                      g,
-                                                                                                                      GEN,
-                                                                                                                      xs,
-                                                                                                                      ys,
-                                                                                                                      part,
-                                                                                                                      s_ant,
-                                                                                                                      s_n,
-                                                                                                                      x_p,
-                                                                                                                      y_p,
-                                                                                                                      bench_function,
-                                                                                                                      y_data,
-                                                                                                                      n,
-                                                                                                                      n_plot,
-                                                                                                                      n_data,
-                                                                                                                      grid_min,
-                                                                                                                      X_test,
-                                                                                                                      creator,
-                                                                                                                      best,
-                                                                                                                      df_bounds,
-                                                                                                                      part_ant,
-                                                                                                                      x_g,
-                                                                                                                      y_g,
-                                                                                                                      file=True,
-                                                                                                                      init=False)
+                    ok, x_h, y_h, fitness, x_p, y_p, y_data, x_bench, y_bench, part, best, n_plot, s_n = part_fitness(
+                        grid, ok, x_h, y_h,
+                        fitness, g,
+                        GEN, xs, ys,
+                        part, s_ant,
+                        s_n,
+                        x_p,
+                        y_p,
+                        bench_function,
+                        y_data, n,
+                        n_plot,
+                        n_data,
+                        grid_min,
+                        X_test,
+                        creator, best,
+                        df_bounds,
+                        part_ant, x_g,
+                        y_g,
+                        file=True,
+                        init=False)
 
-                    sigma, mu, x_a, y_a, post_array = gaussian_regression(n_data, x_h, y_h, fitness, X_test, gpr,
-                                                                          post_array)
-                    sigma_data, mu_data = gpr_value(g, int(part[0]), int(part[1]), X_test, sigma, mu, sigma_data, mu_data)
+                    sigma, mu, x_a, y_a, post_array = gp_regression(n_data, x_h, y_h, fitness, X_test, gpr, post_array)
+                    sigma_data, mu_data = gpr_value(g, int(part[0]), int(part[1]), X_test, sigma, mu, sigma_data,
+                                                    mu_data)
                     samples += 1
 
                     n_data += 1

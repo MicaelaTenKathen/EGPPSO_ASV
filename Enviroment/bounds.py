@@ -24,34 +24,61 @@ def map_bound(xs, ys, load_file=False, file=0):
 
     else:
         grid, resolution = black_white(1, xs, ys)
-        available, first, last = list(), list(), list()
+        available, first, last, y_first, y_last = list(), list(), list(), list(), list()
         bound = True
         confirm = list()
         index, first_x, last_x, all_y = list(), list(), list(), list()
 
+        f, o = True, False
         for j in range(len(grid[1])):
             for i in range(len(grid)):
                 if grid[i, j] == 1:
                     if bound:
-                        first.append([i, j])
+                        first.append(i)
+                        y_first.append(j)
+                        u = 4 + int(y_first[0])
+                        if f:
+                            if j > u:
+                                if y_first[-1] == y_last[-1]:
+                                    first[-5] = first[-2]
+                                    first.insert(-4, first[-1])
+                                    y_first.insert(-4, y_first[-5])
+                                    first[-4] = first[-2]
+                                    first.insert(-3, first[-1])
+                                    y_first.insert(-3, y_first[-4])
+                                    first[-3] = first[-2]
+                                    first.insert(-2, first[-1])
+                                    y_first.insert(-2, y_first[-3])
+                                    o = True
+                                    f = False
                         bound = False
                     available.append([i, j])
-                    grid_ant = [i, j]
+                    grid_ant = i
+                    grid_y = j
                 else:
                     if not bound:
                         last.append(grid_ant)
+                        y_last.append(grid_y)
                         bound = True
+                        if o:
+                            last[-5] = last[-2]
+                            last.insert(-4, last[-1])
+                            last[-4] = last[-2]
+                            last.insert(-3, last[-1])
+                            last[-3] = last[-2]
+                            last.insert(-2, last[-1])
+                            o = False
                     # no_available.append([i, j])
 
         for i in range(len(first)):
-            if first[i][1] == last[i][1]:
+            if first[i] == last[i]:
                 confirm.append(True)
 
         if np.array(confirm).all():
             for i in range(len(first)):
-                first_x.append(first[i][0] + 3)
-                last_x.append(last[i][0] - 3)
-                all_y.append(first[i][1])
+                first_x.append(first[i] + 2)
+                last_x.append(last[i] - 2)
+                all_y.append(y_first[i])
                 # index.append(first[i][1])
             first_x.pop(0), last_x.pop(0), all_y.pop(0)
             first_x.pop(0), last_x.pop(0), all_y.pop(0)
@@ -90,12 +117,19 @@ def interest_area(xs, ys, load_file=False, file=0):
             se_available = np.load(sa)
         return secure_grid, se_available
     else:
-        with open(path[-1] + '/Data/bounds.npy'.format(file), 'rb') as bn:
-            df_bounds = np.load(bn)
+        df_bounds, grid, available = map_bound(xs, ys, load_file=False, file=0)
         secure_grid = np.zeros((xs, ys))
         for i in range(len(df_bounds)):
-            secure_grid[df_bounds[i, 0], df_bounds[i, 2]] = 1
-            secure_grid[df_bounds[i, 1], df_bounds[i, 2]] = 1
+            #p = 0
+            #for j in range(len(df_bounds)):
+            #    if np.array(df_bounds)[i, 0] == np.array(df_bounds)[j, 0] and np.array(df_bounds)[i, 1] == \
+            #            np.array(df_bounds)[j, 1] and np.array(df_bounds)[i, 2] == np.array(df_bounds)[j, 2]:
+            #        p += 1
+            #        if p == 2:
+            #            del(df_bounds[i])
+            #            p = 0
+            secure_grid[np.array(df_bounds)[i, 0], np.array(df_bounds)[i, 2]] = 1
+            secure_grid[np.array(df_bounds)[i, 1], np.array(df_bounds)[i, 2]] = 1
         se_first = list()
         se_last = list()
         se_available = list()
@@ -131,7 +165,7 @@ def interest_area(xs, ys, load_file=False, file=0):
                   'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/secure_av.npy', 'wb') as sa:
             np.save(sa, se_available)
 
-        return secure_grid, se_available
+        return secure_grid, se_available, df_bounds
     # else:
     #     grid = map_bound(load_file=False)
     #     _z = create_map(grid, 1, obstacles_on=False, randomize_shekel=False, sensor="", no_maxima=10,

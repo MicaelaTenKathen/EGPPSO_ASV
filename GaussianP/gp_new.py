@@ -47,7 +47,7 @@ def data(x_p, y_p, y_data):
     return x_a, y_a, x_train, y_train
 
 
-def gaussian_regression(n_data, x_p, y_p, y_data, X_test, gpr, post_array):
+def gp_regression(n_data, x_p, y_p, y_data, X_test, gpr, post_array):
 
     x_a, y_a, x_train, y_train = data(x_p, y_p, y_data)
     gpr.fit(x_train, y_train)

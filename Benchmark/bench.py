@@ -68,13 +68,13 @@ def create_map(grid, resolution, obstacles_on=False, randomize_shekel=False, sen
     else:
         global w_obstacles, a, c
         w_obstacles = obstacles_on
-        xmin = -5
-        xmax = 5
+        xmin = -1.5
+        xmax = 1.5
         ymin = 0
-        ymax = 10
+        ymax = 3
 
         if randomize_shekel:
-            no_maxima = np.random.randint(2, 6)
+            no_maxima = np.random.randint(3, 6)
             xmin = 0
             xmax = 10
             ymin = 0
