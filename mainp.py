@@ -246,7 +246,10 @@ def model_psogp(c1, c2, c3, c4, leng_scale, lam):
         #plot_gaussian(ys, x_g, y_g, n, mu, sigma, X_test, grid, grid_min, part_ant)
         #plot = plot_benchmark(xs, ys, grid, bench_function, X_test)
         #plot_error(MSE_data, it, GEN)
-        array_MSE.append(MSE_data[-1])
+        if last_sample >= 170:
+            array_MSE.append(MSE_data[-1])
+        else:
+            array_MSE.append(5)
 
     array_MSE = np.array(array_MSE)
     MSE = np.mean(array_MSE)

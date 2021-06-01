@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 from Data_scripts.data_treat import Z_var_mean
 import numpy as np
-from GaussianP.gp_new import gp_regression
 from Benchmark.bench import create_map
 
 def plot_evolucion(log):
@@ -47,7 +46,7 @@ def plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid, grid_min, part_ant
 
     Z_var, Z_mean = Z_var_mean(mu, sigma, X_test, grid)
 
-    fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+    fig, axs = plt.subplots(2, 1, figsize=(5, 10))
 
     im1 = axs[0].scatter(x_ga, y_ga, c=n, cmap="gist_rainbow", marker='.')
     p1x = list(map(lambda x: x + abs(grid_min), part_ant[:, 0]))
@@ -88,9 +87,9 @@ def plot_benchmark(xs, ys, grid, bench_function, X_test):
     plot, benchmark_plot = bench_plot(xs, ys, bench_function, X_test, grid)
     plt.figure(2)
     im4 = plt.imshow(benchmark_plot, interpolation='bilinear', origin='lower', cmap="jet")
-    plt.colorbar(im4, format='%.2f', shrink=1)
+    plt.colorbar(im4, format='%.2f', label='µ', shrink=1)
     plt.xlabel("x [m]")
-    plt.ylabel("y [m]")
+    #plt.ylabel("y [m]")
     plt.ylim([ys, 0])
     plt.grid(True)
     # plt.savefig("Benchmark plot", dpi=200)

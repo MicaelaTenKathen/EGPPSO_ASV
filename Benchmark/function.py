@@ -17,14 +17,13 @@ from Enviroment.bounds import *
 #     return bench_max, benchmark_plot
 
 
-def bench_total(xs, ys, load_file=True, load_from_db=False):
+def bench_total(e, xs, ys, load_file=True, load_from_db=False):
     bench = list()
     df_bounds_or, grid_or, X_test_or = map_bound_or(xs, ys, load_file=load_file, file=0)
-    print(grid_or)
-    _z = create_map(grid_or, 1, obstacles_on=False, randomize_shekel=True, sensor="", no_maxima=10,
+    _z = create_map(e, grid_or, 1, obstacles_on=False, randomize_shekel=True, sensor="", no_maxima=10,
                     load_from_db=load_from_db, file=0)
     for i in range(len(X_test_or)):
-        bench.append(_z[X_test_or[i][0], X_test_or[i][+1]])
+        bench.append(_z[X_test_or[i][0], X_test_or[i][1]])
 
     bench_function_or = np.array(bench)
     #meanz = np.nanmean(bench_function)

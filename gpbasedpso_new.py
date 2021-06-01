@@ -1,5 +1,5 @@
 from PSO.stats_pso import statistic
-from PSO.initialize_PSO import *
+from PSO.initialize_PSO_new import *
 from PSO.fitness_pso_new import *
 
 from GaussianP.gp_new import *
@@ -17,20 +17,72 @@ from Enviroment.map import *
 from Enviroment.plots import *
 
 import time
+import openpyxl
+
 
 xs, ys = 100, 150
 
-bench_function, X_test, grid, df_bounds, grid_or = bench_total(xs, ys, load_file=False, load_from_db=True)
+num = 3
+
+if num == 0:
+    bench_function, X_test, grid, df_bounds, grid_or = bench_total(path[-1] + '/Data/shww.npy'.format(0), xs, ys,
+                                                                   load_file=False,
+                                                                   load_from_db=True)
+elif num == 1:
+    bench_function, X_test, grid, df_bounds, grid_or = bench_total(path[-1] + '/Data/shww1.npy'.format(0), xs,
+                                                                   ys, load_file=False,
+                                                                   load_from_db=True)
+elif num == 2:
+    bench_function, X_test, grid, df_bounds, grid_or = bench_total(path[-1] + '/Data/shww2.npy'.format(0), xs, ys,
+                                                                   load_file=False,
+                                                                   load_from_db=True)
+elif num == 3:
+    bench_function, X_test, grid, df_bounds, grid_or = bench_total(path[-1] + '/Data/shww3.npy'.format(0), xs,
+                                                                   ys, load_file=False,
+                                                                   load_from_db=True)
+elif num == 4:
+    bench_function, X_test, grid, df_bounds, grid_or = bench_total(path[-1] + '/Data/shww4.npy'.format(0), xs, ys,
+                                                                   load_file=False,
+                                                                   load_from_db=True)
+elif num == 5:
+    bench_function, X_test, grid, df_bounds, grid_or = bench_total(path[-1] + '/Data/shww5.npy'.format(0), xs,
+                                                                   ys, load_file=False,
+                                                                   load_from_db=True)
+elif num == 6:
+    bench_function, X_test, grid, df_bounds, grid_or = bench_total(path[-1] + '/Data/shww6.npy'.format(0), xs, ys,
+                                                                   load_file=False,
+                                                                   load_from_db=True)
+elif num == 7:
+    bench_function, X_test, grid, df_bounds, grid_or = bench_total(path[-1] + '/Data/shww7.npy'.format(0), xs,
+                                                                   ys, load_file=False,
+                                                                   load_from_db=True)
+elif num == 8:
+    bench_function, X_test, grid, df_bounds, grid_or = bench_total(path[-1] + '/Data/shww8.npy'.format(0), xs, ys,
+                                                                   load_file=False,
+                                                                   load_from_db=True)
+elif num == 9:
+    bench_function, X_test, grid, df_bounds, grid_or = bench_total(path[-1] + '/Data/shww9.npy'.format(0), xs,
+                                                                   ys, load_file=False,
+                                                                   load_from_db=True)
+elif num == 10:
+    bench_function, X_test, grid, df_bounds, grid_or = bench_total(path[-1] + '/Data/shww10.npy'.format(0), xs,
+                                                                   ys, load_file=False,
+                                                                   load_from_db=False)
 
 grid_min, grid_max, grid_max_x, grid_max_y = map_values(xs, ys)
 
+GEN = 6000
+
+seed = [20] #, 95, 541, 65, 145, 156, 158, 12, 3, 89, 57, 123, 456, 789, 987, 654, 321, 147, 258, 369, 741, 852, 963, 159, 951, 753, 357, 756, 8462, 4875]
+
+#for i in range(len(seed)):
 gp_best, mu_best = [0, 0], [0, 0]
 
-c1, c2, c3, c4 = 0, 4, 0, 4
+c3, c4 = 0, 0
 
-e1, e2, e3, e4, e5 = 'Pruebas/Error1.xlsx', 'Pruebas/Sigma1.xlsx', \
-                     'Pruebas/Mu1.xlsx', 'Pruebas/Distance1.xlsx', 'Pruebas/Data1.xlsx'
-GEN, seed = 6000, 20
+c1, c2, c31, c41, length_scale, lam = 3.7648,	2.2512,	1.9676,	0.1526,	0.4,	0.1
+
+
 
 part_dist, part_ant, distances = np.zeros(8), np.zeros((GEN + 1, 8)), np.zeros(
     4)
@@ -40,18 +92,20 @@ g, k, samples, last_sample = 0, 0, 0, 0
 x_p, y_p, y_data, part_data, x_g, y_g, y_mult = list(), list(), list(), list(), list(), list(), list()
 fitness, x_h, y_h = list(), list(), list()
 ok = False
+#e1, e2, e3, e4, e5 = 'Pruebas/NewGP/Error'+str(seed[i])+'.xlsx', 'Pruebas/NewGP/Sigma'+str(seed[i])+'.xlsx', 'Pruebas/NewGP/Mu'+str(seed[i])+'.xlsx', 'Pruebas/NewGP/Distance'+str(seed[i])+'.xlsx', 'Pruebas/NewGP/Data'+str(seed[i])+'.xlsx'
+#e1, e2, e3, e4, e5 = 'Pruebas/Ori/Error95.xlsx', 'Pruebas/Ori/Sigma95.xlsx', 'Pruebas/Ori/Mu95.xlsx', 'Pruebas/Ori/Distance95.xlsx', 'Pruebas/Ori/Data95.xlsx'
 
 initPSO()
 generate(grid_min, grid_max)
-toolbox = tool(grid_min, grid_max, generate, updateParticle)
-random.seed(seed)
+toolbox = tool_n(grid_min, grid_max, generate, updateParticle_n)
+random.seed(4875)
 pop, best = swarm(toolbox, 4)
 stats, logbook = statistic()
 part_array = list()
 s_ant = np.zeros(4)
 s_n = np.array([True, True, True, True])
 
-length_scale = 0.4758
+
 ker = RBF(length_scale=length_scale, length_scale_bounds=(1e-1, 10))
 post_array = [length_scale, length_scale, length_scale, length_scale]
 
@@ -111,7 +165,9 @@ for g in range(GEN):
         if n_data > 4:
             n_data = 1
 
-    if (np.mean(distances) - last_sample) >= (np.min(post_array) * 0.2):
+    if (np.mean(distances) - last_sample) >= (np.min(post_array) * lam):
+        c3 = c31
+        c4 = c41
         k += 1
         ok = True
         print('in')
@@ -159,10 +215,11 @@ for g in range(GEN):
     print(mean_dist)
 
 data = {'Seed': seed, 'GEN': GEN, 'Time': time.time() - start_time, 'MSE_GEN': MSE_data[-1],
-        'Avr_dist': np.mean(distances)}
-data_array = [seed, GEN, time.time() - start_time, MSE_data[-1], np.mean(distances)]
+      'Avr_dist': np.mean(distances)}
+#data_array = [seed, GEN, time.time() - start_time, MSE_data[-1], np.mean(distances)]
 
-savexlsx(MSE_data, sigma_data, mu_data, distances, data_array, e1, e2, e3, e4, e5)
+
+#savexlsx(MSE_data, sigma_data, mu_data, distances, it, e1, e2, e3, e4, e5)
 plot_gaussian(ys, x_g, y_g, n, mu, sigma, X_test, grid_or, grid_min, part_ant)
-plot = plot_benchmark(xs, ys, grid_or, bench_function, X_test)
-plot_error(MSE_data, it, GEN)
+#plot = plot_benchmark(xs, ys, grid_or, bench_function, X_test)
+#plot_error(MSE_data, it, GEN)

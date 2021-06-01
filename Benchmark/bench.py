@@ -1,6 +1,7 @@
 """
-Benchmark functions map #todo ver nombre, preguntar
+Benchmark functions
 author: Federico Peralta
+repository: https://github.com/FedePeralta/BO_drones/blob/master/bin/Utils/utils.py#L45
 """
 
 from sys import path
@@ -44,7 +45,7 @@ def schwefel_arg0(sol):
     return np.nan if w_obstacles and sol[2] == 1 else benchmarks.schwefel(sol[:2])[0]
 
 
-def create_map(grid, resolution, obstacles_on=False, randomize_shekel=False, sensor="", no_maxima=10,
+def create_map(e, grid, resolution, obstacles_on=False, randomize_shekel=False, sensor="", no_maxima=10,
                load_from_db=False, file=0):
     if load_from_db:
         if sensor == "s1":
@@ -63,7 +64,7 @@ def create_map(grid, resolution, obstacles_on=False, randomize_shekel=False, sen
             file = 6
         elif sensor == "s8":
             file = 7
-        with open(path[-1] + '/Data/shww.npy'.format(file), 'rb') as g:
+        with open(e, 'rb') as g:
             return np.load(g)
     else:
         global w_obstacles, a, c
@@ -74,7 +75,7 @@ def create_map(grid, resolution, obstacles_on=False, randomize_shekel=False, sen
         ymax = 10
 
         if randomize_shekel:
-            no_maxima = np.random.randint(2, 6)
+            no_maxima = np.random.randint(4, 6)
             xmin = 0
             xmax = 10
             ymin = 0
@@ -105,7 +106,7 @@ def create_map(grid, resolution, obstacles_on=False, randomize_shekel=False, sen
         _z = (_z - meanz) / stdz
 
         with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
-                  'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/shww.npy', 'wb') as g:
+                  'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/shww1.npy', 'wb') as g:
             np.save(g, _z)
         return _z
 

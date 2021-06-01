@@ -24,7 +24,6 @@ def map_bound_or(xs, ys, load_file=False, file=0):
 
     else:
         grid_or, resolution = black_white(1, xs, ys)
-        print(grid_or)
         available_or, first, last, y_first, y_last = list(), list(), list(), list(), list()
         bound = True
         confirm = list()
