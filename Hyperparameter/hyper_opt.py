@@ -1,8 +1,8 @@
 from PSO.stats_pso import statistic
-from PSO.initialize_PSO_new import *
-from PSO.fitness_pso_new import *
+from PSO.initialize_PSO import *
+from PSO.fitness_pso import *
 
-from GaussianP.gp_new import *
+from GaussianP.gp import *
 from GaussianP.max_values import *
 
 from sklearn.gaussian_process import GaussianProcessRegressor

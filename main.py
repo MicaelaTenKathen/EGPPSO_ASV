@@ -1,11 +1,12 @@
 from PSO.stats_pso import statistic
-from PSO.initialize_PSO_new import *
-from PSO.fitness_pso_new import *
+from PSO.initialize_PSO import *
+from PSO.fitness_pso import *
 
-from GaussianP.gp_new import *
+from GaussianP.gp import *
 from GaussianP.max_values import *
 
 from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels import RBF
 
 from Benchmark.function import *
 
@@ -217,7 +218,7 @@ data = {'Seed': seed, 'GEN': GEN, 'Time': time.time() - start_time, 'MSE_GEN': M
         'Avr_dist': np.mean(distances)}
 
 
-savexlsx(MSE_data, sigma_data, mu_data, distances, it, e1, e2, e3, e4, e5)
+# savexlsx(MSE_data, sigma_data, mu_data, distances, it, e1, e2, e3, e4, e5)
 plot_gaussian(ys, x_g, y_g, n, mu, sigma, X_test, grid_or, grid_min, part_ant)
 plot = plot_benchmark(xs, ys, grid_or, bench_function, X_test)
 plot_error(MSE_data, it, GEN)
