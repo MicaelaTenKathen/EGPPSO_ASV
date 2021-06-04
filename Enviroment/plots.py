@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from Data_scripts.data_treat import Z_var_mean
 import numpy as np
 from Benchmark.bench import create_map
+import matplotlib.ticker as ticker
 
 def plot_evolucion(log):
     gen = log.select("gen")
@@ -63,20 +64,32 @@ def plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid, grid_min, part_ant
     axs[0].plot(p4x, p4y, 'k')
 
     im2 = axs[0].imshow(Z_var.T, interpolation='bilinear', origin='lower', cmap="viridis")
-    plt.colorbar(im2, ax=axs[0], format='%.2f', label='σ', shrink=1.0)
+    #plt.colorbar(im2, ax=axs[0], format='%.2f', label='σ', shrink=1.0)
     # axs[0].set_xlabel("x [m]")
     axs[0].set_ylabel("y [m]")
+    axs[0].set_yticks([0, 20, 40, 60, 80, 100, 120, 140])
+    axs[0].set_xticks([0, 50, 100])
     axs[0].set_aspect('equal')
     axs[0].set_ylim([ys, 0])
     axs[0].grid(True)
+    ticks_x = ticker.FuncFormatter(lambda x, pos: '{0:g}'.format(x * 100))
+    axs[0].xaxis.set_major_formatter(ticks_x)
+
+    ticks_y = ticker.FuncFormatter(lambda x, pos: '{0:g}'.format(x * 100))
+    axs[0].yaxis.set_major_formatter(ticks_y)
 
     im3 = axs[1].imshow(Z_mean.T, interpolation='bilinear', origin='lower', cmap="jet")
-    plt.colorbar(im3, ax=axs[1], format='%.2f', label='µ', shrink=1.0)
+    #plt.colorbar(im3, ax=axs[1], format='%.2f', label='µ', shrink=1.0)
     axs[1].set_xlabel("x [m]")
     axs[1].set_ylabel("y [m]")
     axs[1].set_ylim([ys, 0])
     axs[1].set_aspect('equal')
     axs[1].grid(True)
+    ticks_x = ticker.FuncFormatter(lambda x, pos: '{0:g}'.format(x * 100))
+    axs[1].xaxis.set_major_formatter(ticks_x)
+
+    ticks_y = ticker.FuncFormatter(lambda x, pos: '{0:g}'.format(x * 100))
+    axs[1].yaxis.set_major_formatter(ticks_y)
 
     # fig.savefig("STD, MEAN", dpi=200)
     plt.show()
@@ -85,15 +98,21 @@ def plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid, grid_min, part_ant
 def plot_benchmark(xs, ys, grid, bench_function, X_test):
 
     plot, benchmark_plot = bench_plot(xs, ys, bench_function, X_test, grid)
-    plt.figure(2)
-    im4 = plt.imshow(benchmark_plot, interpolation='bilinear', origin='lower', cmap="jet")
+
+    fig = plt.figure(2)
+    ax1 = fig.add_subplot(121)
+    im4 = ax1.imshow(benchmark_plot, interpolation='bilinear', origin='lower', cmap="jet")
     plt.colorbar(im4, format='%.2f', label='µ', shrink=1)
-    plt.xlabel("x [m]")
-    #plt.ylabel("y [m]")
-    plt.ylim([ys, 0])
-    plt.grid(True)
-    # plt.savefig("Benchmark plot", dpi=200)
-    plt.show()
+    ax1.set_xlabel("x [m]")
+    ax1.set_ylabel("y [m]")
+    ax1.set_ylim([ys, 0])
+    ax1.set_aspect('equal')
+    ax1.grid(True)
+    ticks_x = ticker.FuncFormatter(lambda x, pos: '{0:g}'.format(x * 100))
+    ax1.xaxis.set_major_formatter(ticks_x)
+
+    ticks_y = ticker.FuncFormatter(lambda x, pos: '{0:g}'.format(x * 100))
+    ax1.yaxis.set_major_formatter(ticks_y)
     return plot
 
 

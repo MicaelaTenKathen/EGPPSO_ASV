@@ -1,18 +1,5 @@
 import numpy as np
-from Enviroment.bounds import interest_area
 from Data_scripts.ratio import ratio_s
-
-
-def limit(part, grid_min, grid_max):
-    if part[0] <= grid_min:
-        part[0] = grid_min
-    if part[0] >= grid_max:
-        part[0] = grid_max - 1
-    if part[1] <= grid_min:
-        part[1] = grid_min
-    if part[1] >= grid_max:
-        part[1] = grid_max - 1
-    return part
 
 
 def new_limit(g, xs, ys, part, df_bounds, part_ant, n_data, s_ant, s_n, secure):
@@ -91,38 +78,6 @@ def new_limit(g, xs, ys, part, df_bounds, part_ant, n_data, s_ant, s_n, secure):
                 else:
                     part[0] = bn[0, 1] - 2
             s_ant[3] = s
-        # else:
-        #     if x_int < bn[0, 0]:
-        #         part[0] = bn[0, 0]
-        #     elif x_int > bn[-1, 1]:
-        #         part[0] = bn[-1, 1]
-        #     else:
-        #         if init:
-        #             if x_int < bn[0, 0]:
-        #                 part[0] = bn[0, 0]
-        #             elif x_int > bn[-1, 1]:
-        #                 part[0] = bn[-1, 1]
-        #         else:
-        #             part = ratio_s(x_int, y_int, grid, part)
-        #             if n_data == 1.0:
-        #                 s_ant[0] = s
-        #                 ant = part_ant[g, 0]
-        #             elif n_data == 2.0:
-        #                 s_ant[1] = s
-        #                 ant = part_ant[g, 2]
-        #             elif n_data == 3.0:
-        #                 s_ant[2] = s
-        #                 ant = part_ant[g, 4]
-        #             elif n_data == 4.0:
-        #                 s_ant[3] = s
-        #                 ant = part_ant[g, 6]
-        #             for i in range(len(bn)):
-        #                 if ant >= bn[i, 1]:
-        #                     part[0] = bn[i, 1]
-        #                     break
-        #                 else:
-        #                     part[0] = bn[i + 1, 0]
-        #                     break
     else:
         s = 0
         for i in range(len(df_bounds)):

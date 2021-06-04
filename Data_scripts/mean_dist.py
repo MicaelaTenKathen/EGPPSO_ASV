@@ -1,6 +1,7 @@
 import openpyxl
 import numpy as np
 
+
 def mean_distance(d, n):
     wb1 = openpyxl.load_workbook(n)
     hoja1 = wb1.active
@@ -14,11 +15,16 @@ def mean_distance(d, n):
     d = np.mean(d)
     return d
 
-seed = [20, 3, 12, 57, 65, 89, 95, 123, 145, 147, 156, 158, 159, 258, 321, 357, 369, 456, 541, 654, 741, 753, 756, 789, 852, 951, 963, 987, 4875, 8462]
+
+seed = [20, 3, 12, 57, 65, 89, 95, 123, 145, 147, 156, 158, 159, 258, 321, 357, 369, 456, 541, 654, 741, 753, 756, 789,
+        852, 951, 963, 987, 4875, 8462]
 dist = list()
 
 for i in range(len(seed)):
-    d = mean_distance(dist, str(r'C:\Users\mcjara\OneDrive - Universidad Loyola Andalucía\Documentos\PycharmProjects\PSO_ASVs\Pruebas\NewGP\Distance'+str(seed[i])+'.xlsx'))
+    d = mean_distance(dist, str(r'C:\Users\mcjara\OneDrive - Universidad Loyola '
+                                r'Andalucía\Documentos\PycharmProjects\EGPPSO_ASV\Pruebas\NewGPCaseA\Distance' +
+                                str(seed[i]) + '.xlsx'))
     dist.append(d)
+
 dist = np.array(dist)
 mean_dist = np.mean(dist)

@@ -7,24 +7,28 @@ def data_val(n):
     data = list()
     h = 0
     hoja2 = wb2.active
-    while True :
+    while True:
         h += 1
         print(h)
         cel2 = hoja2.cell(row=1, column=h)
         l = cel2.value
-        if l == None:
-            del(data[-1])
+        if l is None:
+            del (data[-1])
             break
         else:
             data.append(cel2.value)
     return data
 
-def error_m(multmin, multmax, b, u,
-            b20, b3, b12, b123, b145, b147, b156, b158, b159, b258, b321, b357, b369, b456, b4875, b541, b57, b65, b654, b741, b753, b756, b789, b8462, b852, b89, b95, b951, b963, b987):
+
+def error_m(multmin, multmax, b, u, b20, b3, b12, b123, b145, b147, b156, b158, b159, b258, b321, b357, b369, b456,
+            b4875, b541, b57, b65, b654, b741, b753, b756, b789, b8462, b852, b89, b95, b951, b963, b987):
     wb3 = openpyxl.load_workbook(u)
     hoja3 = wb3.active
+
     array = globals()['data%s' % seed[i]]
+
     mse = list()
+
     if seed[i] == 20:
         b = b20
     elif seed[i] == 3:
@@ -85,12 +89,14 @@ def error_m(multmin, multmax, b, u,
         b = b963
     elif seed[i] == 987:
         b = b987
+
     for j in range(len(array)):
         if multmin <= array[j] < multmax:
             b += 1
             print(b)
             cel3 = hoja3.cell(row=1, column=b)
             mse.append(cel3.value)
+
     if seed[i] == 20:
         b20 = b
     elif seed[i] == 3:
@@ -151,33 +157,61 @@ def error_m(multmin, multmax, b, u,
         b963 = b
     elif seed[i] == 987:
         b987 = b
-    return mse, b20, b3, b12, b123, b145, b147, b156, b158, b159, b258, b321, b357, b369, b456, b4875, b541, b57, b65, b654, b741, b753, b756, b789, b8462, b852, b89, b95, b951, b963, b987
+
+    return mse, b20, b3, b12, b123, b145, b147, b156, b158, b159, b258, b321, b357, b369, b456, b4875, b541, b57, b65, \
+           b654, b741, b753, b756, b789, b8462, b852, b89, b95, b951, b963, b987
 
 
-#seed = [20, 95, 541, 65, 145, 541, 156, 158, 12, 3, 89, 57, 123, 456, 789, 987, 654, 321, 147, 258, 369, 741, 852, 963, 159, 951, 753, 357, 756, 8462, 4875]
-seed = [20, 3, 12, 57, 65, 89, 95, 123, 145, 147, 156, 158, 159, 258, 321, 357, 369, 456, 541, 654, 741, 753, 756, 789, 852, 951, 963, 987, 4875, 8462]
+seed = [20, 3, 12, 57, 65, 89, 95, 123, 145, 147, 156, 158, 159, 258, 321, 357, 369, 456, 541, 654, 741, 753, 756, 789,
+        852, 951, 963, 987, 4875, 8462]
+
 dist = list()
 mse_mean = list()
 mse_std = list()
 it = list()
 
 d = dict
+
 for i in range(len(seed)):
-    globals()['data%s' % seed[i]] = data_val(str(r'C:\Users\mcjara\OneDrive - Universidad Loyola Andalucía\Documentos\PycharmProjects\PSO_ASVs\Pruebas\Ori\Data'+str(seed[i])+'.xlsx'))
-    print('in')
+    globals()['data%s' % seed[i]] = data_val(str(r'C:\Users\mcjara\OneDrive - Universidad Loyola '
+                                                 r'Andalucía\Documentos\PycharmProjects\PSO_ASVs\Pruebas\EGPPSO_ASV'
+                                                 r'\Data' + str(seed[i]) + '.xlsx'))
 
 multmin = 0
-mse400, mse800, mse1200, mse1600, mse2000, mse2400, mse2800, mse3200, mse3600, mse4000, mse4400, mse4800, mse5200, mse5600, mse6000 = list(), list(), list(), list(), list(), list(), list(), list(), list(), list(), list(), list(), list(), list(), list()
-b20, b3, b12, b123, b145, b147, b156, b158, b159, b258, b321, b357, b369, b456, b4875, b541, b57, b65, b654, b741, b753, b756, b789, b8462, b852, b89, b95, b951, b963, b987 = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+
+mse400, mse800, mse1200, mse1600, mse2000, mse2400, mse2800, mse3200, mse3600, mse4000, mse4400, mse4800, mse5200, \
+mse5600, mse6000 = list(), list(), list(), list(), list(), list(), list(), list(), list(), list(), list(), list(), \
+                   list(), list(), list()
+
+b20, b3, b12, b123, b145, b147, b156, b158, b159, b258, b321, b357, b369, b456, b4875, b541, b57, b65, b654, b741, \
+b753, b756, b789, b8462, b852, b89, b95, b951, b963, b987 = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \
+                                                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+
 mult = list()
 
 while multmin < 6001:
     multmax = multmin + 400
     mult.append(multmin)
+
     for i in range(len(seed)):
         b = 0
-        mse, b20, b3, b12, b123, b145, b147, b156, b158, b159, b258, b321, b357, b369, b456, b4875, b541, b57, b65, b654, b741, b753, b756, b789, b8462, b852, b89, b95, b951, b963, b987 = error_m(multmin, multmax, b, str(r'C:\Users\mcjara\OneDrive - Universidad Loyola Andalucía\Documentos\PycharmProjects\PSO_ASVs\Pruebas\Ori\Error'+str(seed[i])+'.xlsx'),
-                      b20, b3, b12, b123, b145, b147, b156, b158, b159, b258, b321, b357, b369, b456, b4875, b541, b57, b65, b654, b741, b753, b756, b789, b8462, b852, b89, b95, b951, b963, b987)
+        mse, b20, b3, b12, b123, b145, b147, b156, b158, b159, b258, b321, b357, b369, b456, b4875, b541, b57, b65, \
+        b654, b741, b753, b756, b789, b8462, b852, b89, b95, b951, b963, b987 = error_m(multmin, multmax, b,
+                                                                                        str(r'C:\Users\mcjara'
+                                                                                            r'\OneDrive - Universidad '
+                                                                                            r'Loyola '
+                                                                                            r'Andalucía\Documentos'
+                                                                                            r'\PycharmProjects'
+                                                                                            r'\PSO_ASVs\Pruebas\EGPPSO_ASV'
+                                                                                            r'\Error' + str(
+                                                                                            seed[i]) + '.xlsx'),
+                                                                                        b20, b3, b12, b123, b145, b147,
+                                                                                        b156, b158, b159, b258, b321,
+                                                                                        b357, b369, b456, b4875, b541,
+                                                                                        b57, b65, b654, b741, b753,
+                                                                                        b756, b789, b8462, b852, b89,
+                                                                                        b95, b951, b963, b987)
+
         if multmax == 400:
             for k in range(len(mse)):
                 mse400.append(mse[k])
@@ -223,9 +257,8 @@ while multmin < 6001:
         elif multmax == 6000:
             for k in range(len(mse)):
                 mse6000.append(mse[k])
+
     multmin = multmax
-    print(multmax)
-    print('in')
 
 mse_mean = list()
 mse400 = np.array(mse400)
@@ -308,18 +341,23 @@ mse_std.append(mse_std5200)
 mse_std.append(mse_std5600)
 mse_std.append(mse_std6000)
 
-
-
-
 wb10 = openpyxl.Workbook()
 hoja10 = wb10.active
 hoja10.append(mse_mean)
-wb10.save(str(r'C:\Users\mcjara\OneDrive - Universidad Loyola Andalucía\Documentos\PycharmProjects\PSO_ASVs\Pruebas\Ori\MSE_Mean.xlsx'))
+wb10.save(str(
+    r'C:\Users\mcjara\OneDrive - Universidad Loyola '
+    r'Andalucía\Documentos\PycharmProjects\EGPPSO_ASV\Pruebas\NewGP\MSE_Mean.xlsx'))
+
 wb20 = openpyxl.Workbook()
 hoja20 = wb20.active
 hoja20.append(mse_std)
-wb20.save(str(r'C:\Users\mcjara\OneDrive - Universidad Loyola Andalucía\Documentos\PycharmProjects\PSO_ASVs\Pruebas\Ori\MSE_Std.xlsx'))
+wb20.save(str(
+    r'C:\Users\mcjara\OneDrive - Universidad Loyola '
+    r'Andalucía\Documentos\PycharmProjects\EGPPSO_ASV\Pruebas\NewGP\MSE_Std.xlsx'))
+
 wb30 = openpyxl.Workbook()
 hoja30 = wb30.active
 hoja30.append(mult)
-wb30.save(str(r'C:\Users\mcjara\OneDrive - Universidad Loyola Andalucía\Documentos\PycharmProjects\PSO_ASVs\Pruebas\Ori\MSE_Mult.xlsx'))
+wb30.save(str(
+    r'C:\Users\mcjara\OneDrive - Universidad Loyola '
+    r'Andalucía\Documentos\PycharmProjects\EGPPSO_ASV\Pruebas\NewGP\MSE_Mult.xlsx'))

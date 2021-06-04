@@ -2,8 +2,6 @@ from Enviroment.map import black_white
 import pandas as pd
 import numpy as np
 from sys import path
-from Benchmark.bench import create_map
-import matplotlib.pyplot as plt
 
 
 def map_bound(xs, ys, load_file=False, file=0):
@@ -16,9 +14,6 @@ def map_bound(xs, ys, load_file=False, file=0):
 
         with open(path[-1] + '/Data/available.npy'.format(file), 'rb') as av:
             available = np.load(av)
-
-        # with open(path[-1] + '/Data/no_available.npy'.format(file), 'rb') as nav:
-        #     no_available = np.load(nav)
 
         return df_bounds, grid, available
 
@@ -68,7 +63,6 @@ def map_bound(xs, ys, load_file=False, file=0):
                             last[-3] = last[-2]
                             last.insert(-2, last[-1])
                             o = False
-                    # no_available.append([i, j])
 
         for i in range(len(first)):
             if first[i] == last[i]:
@@ -79,7 +73,7 @@ def map_bound(xs, ys, load_file=False, file=0):
                 first_x.append(first[i] + 2)
                 last_x.append(last[i] - 2)
                 all_y.append(y_first[i])
-                # index.append(first[i][1])
+
             first_x.pop(0), last_x.pop(0), all_y.pop(0)
             first_x.pop(0), last_x.pop(0), all_y.pop(0)
             first_x.pop(-1), last_x.pop(-1), all_y.pop(-1)
@@ -90,20 +84,16 @@ def map_bound(xs, ys, load_file=False, file=0):
             print('An error occurred. Map bound, y array')
 
         with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
-                  'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/bounds.npy', 'wb') as bn:
+                  'Andalucía/Documentos/PycharmProjects/EGPPSO_ASV/Data/bounds.npy', 'wb') as bn:
             np.save(bn, df_bounds)
 
         with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
-                  'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/grid.npy', 'wb') as gd:
+                  'Andalucía/Documentos/PycharmProjects/EGPPSO_ASV/Data/grid.npy', 'wb') as gd:
             np.save(gd, grid)
 
         with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
-                  'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/available.npy', 'wb') as av:
+                  'Andalucía/Documentos/PycharmProjects/EGPPSO_ASV/Data/available.npy', 'wb') as av:
             np.save(av, available)
-
-        # with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
-        #           'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/no_available.npy', 'wb') as nav:
-        #     np.save(nav, no_available)
 
         return df_bounds, grid, available
 
@@ -119,20 +109,15 @@ def interest_area(xs, ys, load_file=False, file=0):
     else:
         df_bounds, grid, available = map_bound(xs, ys, load_file=False, file=0)
         secure_grid = np.zeros((xs, ys))
+
         for i in range(len(df_bounds)):
-            #p = 0
-            #for j in range(len(df_bounds)):
-            #    if np.array(df_bounds)[i, 0] == np.array(df_bounds)[j, 0] and np.array(df_bounds)[i, 1] == \
-            #            np.array(df_bounds)[j, 1] and np.array(df_bounds)[i, 2] == np.array(df_bounds)[j, 2]:
-            #        p += 1
-            #        if p == 2:
-            #            del(df_bounds[i])
-            #            p = 0
             secure_grid[np.array(df_bounds)[i, 0], np.array(df_bounds)[i, 2]] = 1
             secure_grid[np.array(df_bounds)[i, 1], np.array(df_bounds)[i, 2]] = 1
+
         se_first = list()
         se_last = list()
         se_available = list()
+
         for j in range(len(secure_grid[1])):
             con = False
             uno = 0
@@ -144,6 +129,7 @@ def interest_area(xs, ys, load_file=False, file=0):
                     secure_grid[i, j] = 1
 
         bound = True
+
         for j in range(len(secure_grid[1])):
             for i in range(len(secure_grid)):
                 if secure_grid[i, j] == 1:
@@ -158,52 +144,11 @@ def interest_area(xs, ys, load_file=False, file=0):
                         bound = True
 
         with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
-                  'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/secure_grid.npy', 'wb') as sg:
+                  'Andalucía/Documentos/PycharmProjects/EGPPSO_ASV/Data/secure_grid.npy', 'wb') as sg:
             np.save(sg, secure_grid)
 
         with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
-                  'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/secure_av.npy', 'wb') as sa:
+                  'Andalucía/Documentos/PycharmProjects/EGPPSO_ASV/Data/secure_av.npy', 'wb') as sa:
             np.save(sa, se_available)
 
         return secure_grid, se_available, df_bounds
-    # else:
-    #     grid = map_bound(load_file=False)
-    #     _z = create_map(grid, 1, obstacles_on=False, randomize_shekel=False, sensor="", no_maxima=10,
-    #                     load_from_db=True, file=0)
-    #     for j in range(len(grid[1])):
-    #         for i in range(len(grid)):
-    #             if grid[i, j] == 0:
-    #                 _z[i, j] = np.nan
-    #     _z2 = np.transpose(_z)
-    #
-    #     with open('C:/Users/mcjara/OneDrive - Universidad Loyola '
-    #               'Andalucía/Documentos/PycharmProjects/PSO_ASVs/Data/area.npy', 'wb') as ar:
-    #         np.save(ar, _z2)
-    #
-    #     return _z2
-
-
-# df_bounds, grid, available = map_bound(100, 150)
-# grid[grid == 0] = np.nan
-# new_grid = pd.DataFrame.to_numpy(new_grid)
-#secure = interest_area(100, 150, load_file=False, file=0)
-#secure[secure == 0] = np.nan
-
-
-#
-
-# minz = np.min(_z)
-#
-# im4 = plt.imshow(grid.T)  # for imshow the array must be transposed
-#im5 = plt.imshow(secure.T)  # for imshow the array must be transposed
-
-# plt.colorbar(im4, format='%.2f', shrink=1)
-# plt.xlabel("x [m]")
-# plt.ylabel("y [m]")
-# plt.ylim([0, 1500])
-# # Axs[1].set_aspect('equal')
-# # plt.title('Ground Truth')
-# plt.grid(True)
-# # plt.savefig("map.PNG")
-#plt.show()
-# im5.show()

@@ -1,5 +1,5 @@
 from Data_scripts.data_bound import new_limit
-import numpy as np
+
 
 def part_fitness(secure, ok, x_h, y_h, fitness, g, GEN, xs, ys, part, s_ant, s_n, x_p, y_p, bench_function, y_data, n, n_plot, n_data, grid_min, X_test, creator, best,
                  df_bounds, part_ant, x_g, y_g, file, init=True):
