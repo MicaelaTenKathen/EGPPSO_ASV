@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
-from Data_scripts.data_treat import Z_var_mean
+from Data_scripts.data_bound import Z_var_mean
 import numpy as np
-from Benchmark.bench import create_map
 import matplotlib.ticker as ticker
+
 
 def plot_evolucion(log):
     gen = log.select("gen")
@@ -44,7 +44,6 @@ def bench_plot(xs, ys, bench_function, X_test, grid):
 
 
 def plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid, grid_min, part_ant):
-
     Z_var, Z_mean = Z_var_mean(mu, sigma, X_test, grid)
 
     fig, axs = plt.subplots(2, 1, figsize=(5, 10))
@@ -64,7 +63,7 @@ def plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid, grid_min, part_ant
     axs[0].plot(p4x, p4y, 'k')
 
     im2 = axs[0].imshow(Z_var.T, interpolation='bilinear', origin='lower', cmap="viridis")
-    #plt.colorbar(im2, ax=axs[0], format='%.2f', label='σ', shrink=1.0)
+    # plt.colorbar(im2, ax=axs[0], format='%.2f', label='σ', shrink=1.0)
     # axs[0].set_xlabel("x [m]")
     axs[0].set_ylabel("y [m]")
     axs[0].set_yticks([0, 20, 40, 60, 80, 100, 120, 140])
@@ -79,7 +78,7 @@ def plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid, grid_min, part_ant
     axs[0].yaxis.set_major_formatter(ticks_y)
 
     im3 = axs[1].imshow(Z_mean.T, interpolation='bilinear', origin='lower', cmap="jet")
-    #plt.colorbar(im3, ax=axs[1], format='%.2f', label='µ', shrink=1.0)
+    # plt.colorbar(im3, ax=axs[1], format='%.2f', label='µ', shrink=1.0)
     axs[1].set_xlabel("x [m]")
     axs[1].set_ylabel("y [m]")
     axs[1].set_ylim([ys, 0])
@@ -96,7 +95,6 @@ def plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid, grid_min, part_ant
 
 
 def plot_benchmark(xs, ys, grid, bench_function, X_test):
-
     plot, benchmark_plot = bench_plot(xs, ys, bench_function, X_test, grid)
 
     fig = plt.figure(2)

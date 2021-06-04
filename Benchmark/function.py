@@ -1,10 +1,10 @@
-from Enviroment.bounds_or import map_bound_or
 from Enviroment.bounds import *
+from Benchmark.bench import *
 
 
 def bench_total(e, xs, ys, load_file=True, load_from_db=False):
     bench = list()
-    df_bounds_or, grid_or, X_test_or = map_bound_or(xs, ys, load_file=load_file, file=0)
+    df_bounds_or, grid_or, X_test_or = map_bound(xs, ys, load_file=load_file, file=0)
     _z = create_map(e, grid_or, 1, obstacles_on=False, randomize_shekel=True, sensor="", no_maxima=10,
                     load_from_db=load_from_db, file=0)
     for i in range(len(X_test_or)):
