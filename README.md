@@ -17,3 +17,4 @@ Note: the last versions of scipy library produce errors. The version used in thi
 ## Use
 
 The [main](main.py) file contains the proposed algorithm. The hyperpameter optimization is in [Hyperparameter](Hyperparameter/hyper_opt.py).
+
