@@ -98,7 +98,7 @@ def plot_gaussian(ys, x_ga, y_ga, n, mu, sigma, X_test, grid, grid_min, part_ant
     ticks_y = ticker.FuncFormatter(lambda x, pos: format(int(x * 100), ','))
     axs[1].yaxis.set_major_formatter(ticks_y)
 
-    plt.savefig("Image/plot.pdf")
+    #plt.savefig("Image/plot.pdf")
     plt.show()
 
 
