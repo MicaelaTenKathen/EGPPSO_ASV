@@ -79,7 +79,8 @@ gp_best, mu_best = [0, 0], [0, 0]
 c3, c4 = 0, 0
 
 # Values obtained from hyper-parameter optimization
-c1, c2, c31, c41, length_scale, lam = 3.1286, 2.568, 0.79, 0, 1, 0.1
+c1, c2, c31, c41, length_scale, lam = 3.1286,	2.568,	0.79,	0,	1,	0.1
+
 
 
 part_dist, part_ant, distances = np.zeros(8), np.zeros((GEN + 1, 8)), np.zeros(4)
@@ -237,7 +238,7 @@ data = {'Seed': seed, 'GEN': GEN, 'Time': time.time() - start_time, 'MSE_GEN': M
         'Avr_dist': np.mean(distances)}
 
 
-savexlsx(MSE_data, sigma_data, mu_data, distances, it, e1, e2, e3, e4, e5)
+#savexlsx(MSE_data, sigma_data, mu_data, distances, it, e1, e2, e3, e4, e5)
 plot_gaussian(ys, x_g, y_g, n, mu, sigma, X_test, grid_or, grid_min, part_ant)
 plot = plot_benchmark(xs, ys, grid_or, bench_function, X_test)
 plot_error(MSE_data, it, GEN)
